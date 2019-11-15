@@ -37,6 +37,7 @@ namespace GroupDStegafy.View
                 ViewMode = PickerViewMode.Thumbnail
             };
             openPicker.FileTypeFilter.Add(".bmp");
+            openPicker.FileTypeFilter.Add(".png");
             openPicker.FileTypeFilter.Add(".txt");
 
             var file = await openPicker.PickSingleFileAsync();

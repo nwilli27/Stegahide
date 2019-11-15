@@ -12,7 +12,7 @@ namespace GroupDStegafy.ViewModel
     public class MainPageViewModel : INotifyPropertyChanged
     {
         private Bitmap sourceBitmap;
-        private Bitmap secretBitmap;
+        private MonochromeBitmap secretBitmap;
         private string secretText;
 
         public Bitmap SourceBitmap
@@ -28,7 +28,7 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
-        public Bitmap SecretBitmap
+        public MonochromeBitmap SecretBitmap
         {
             get => this.secretBitmap;
             set
@@ -41,7 +41,8 @@ namespace GroupDStegafy.ViewModel
         }
 
         public WriteableBitmap SourceWriteableBitmap => this.SourceBitmap?.AsWritableBitmapAsync().Result;
-        public WriteableBitmap SecretWriteableBitmap => this.SecretBitmap?.AsWritableBitmapAsync().Result;
+
+        public WriteableBitmap SecretWriteableBitmap => this.secretBitmap?.ToBitmap().AsWritableBitmapAsync().Result;
 
         public RelayCommand EncodeCommand { get; }
         public RelayCommand DecodeCommand { get; }
@@ -64,8 +65,9 @@ namespace GroupDStegafy.ViewModel
         {
             if (file != null)
             {
-                // TODO make sure that the image is either monochrome or text, and handle text appropriately
-                this.SecretBitmap = await BitmapReader.ReadAndReturnBitmap(file);
+                // TODO handle text files differently
+                var bitmap = await BitmapReader.ReadAndReturnBitmap(file);
+                this.SecretBitmap = new MonochromeBitmap(bitmap);
             }
         }
 

@@ -10,20 +10,20 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class Bitmap
     {
-        private readonly byte[] pixels;
+        public byte[] PixelBytes { get; }
 
         #region Properties
 
         public uint Width { get; }
-        public uint Height => (uint) this.pixels.Length / this.Width;
+        public uint Height => (uint) this.PixelBytes.Length / (4 * this.Width);
         public uint DpiX { get; }
         public uint DpiY { get; }
 
         #endregion
 
-        public Bitmap(byte[] pixels, uint width, uint dpix, uint dpiy)
+        public Bitmap(byte[] pixelBytes, uint width, uint dpix, uint dpiy)
         {
-            this.pixels = pixels;
+            this.PixelBytes = pixelBytes;
             this.Width = width;
             this.DpiX = dpix;
             this.DpiY = dpiy;
@@ -34,26 +34,27 @@ namespace GroupDStegafy.Model.Image
             var writeableBitmap = new WriteableBitmap((int)this.Width, (int)this.Height);
             using (var writeStream = writeableBitmap.PixelBuffer.AsStream())
             {
-                await writeStream.WriteAsync(this.pixels, 0, this.pixels.Length);
+                await writeStream.WriteAsync(this.PixelBytes, 0, this.PixelBytes.Length);
                 return writeableBitmap;
             }
         }
 
-        private Color getPixelBgra8(int x, int y)
+        public Color GetPixelBgra8(int x, int y)
         {
-            var offset = (x * (int)this.Width + y) * 4;
-            var r = this.pixels[offset + 2];
-            var g = this.pixels[offset + 1];
-            var b = this.pixels[offset + 0];
-            return Color.FromArgb(0, r, g, b);
+            var offset = (y * (int)this.Width + x) * 4;
+            var r = this.PixelBytes[offset + 2];
+            var g = this.PixelBytes[offset + 1];
+            var b = this.PixelBytes[offset + 0];
+            return Color.FromArgb(255, r, g, b);
         }
 
-        private void setPixelBgra8(int x, int y, Color color)
+        public void SetPixelBgra8(int x, int y, Color color)
         {
-            var offset = (x * (int)this.Width + y) * 4;
-            this.pixels[offset + 2] = color.R;
-            this.pixels[offset + 1] = color.G;
-            this.pixels[offset + 0] = color.B;
+            var offset = (y * (int)this.Width + x) * 4;
+            this.PixelBytes[offset + 3] = color.A;
+            this.PixelBytes[offset + 2] = color.R;
+            this.PixelBytes[offset + 1] = color.G;
+            this.PixelBytes[offset + 0] = color.B;
         }
 
         public void EmbedMonochromeImage(bool[] pixels, uint width)
@@ -62,9 +63,9 @@ namespace GroupDStegafy.Model.Image
             {
                 for (var x = 0; x < width; x++)
                 {
-                    var pixelColor = this.getPixelBgra8(x, (int) (i / width));
+                    var pixelColor = this.GetPixelBgra8(x, (int) (i / width));
                     pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, pixels[i]);
-                    this.setPixelBgra8(x, (int) (i / width), pixelColor);
+                    this.SetPixelBgra8(x, (int) (i / width), pixelColor);
                 }
             }
         }
