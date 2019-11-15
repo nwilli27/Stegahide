@@ -48,6 +48,14 @@ namespace GroupDStegafy.Model.Image
             return Color.FromArgb(0, r, g, b);
         }
 
+        private void setPixelBgra8(int x, int y, Color color)
+        {
+            var offset = (x * (int)this.Width + y) * 4;
+            this.pixels[offset + 2] = color.R;
+            this.pixels[offset + 1] = color.G;
+            this.pixels[offset + 0] = color.B;
+        }
+
         public void EmbedMonochromeImage(bool[] pixels, uint width)
         {
             for (var i = 0; i < pixels.Length; i++)
@@ -56,6 +64,7 @@ namespace GroupDStegafy.Model.Image
                 {
                     var pixelColor = this.getPixelBgra8(x, (int) (i / width));
                     pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, pixels[i]);
+                    this.setPixelBgra8(x, (int) (i / width), pixelColor);
                 }
             }
         }
