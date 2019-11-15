@@ -31,7 +31,7 @@
         <Button Name="saveSourceButton" Content="Save" IsEnabled="False" Canvas.Left="613" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
         <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="256" Width="{StaticResource ButtonWidth}" Click="loadSecretButton_Click"/>
         <Button Name="saveSecretButton" Content="Save" IsEnabled="False" Canvas.Left="1377" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
-        <Button Name="encodeButton" Content="Encode" IsEnabled="False" Canvas.Left="713" Canvas.Top="331" Width="{StaticResource ButtonWidth}"/>
-        <Button Name="decodeButton" Content="Decode" IsEnabled="False" Canvas.Left="713" Canvas.Top="484" Width="{StaticResource ButtonWidth}"/>
+        <Button Name="encodeButton" Content="Encode" Canvas.Left="713" Canvas.Top="331" Width="{StaticResource ButtonWidth}" Command="{Binding EncodeCommand}"/>
+        <Button Name="decodeButton" Content="Decode" Canvas.Left="713" Canvas.Top="484" Width="{StaticResource ButtonWidth}" Command="{Binding DecodeCommand}"/>
     </Canvas>
 </Page>
