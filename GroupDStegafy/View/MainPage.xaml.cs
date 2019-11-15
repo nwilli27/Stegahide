@@ -1,4 +1,7 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using System;
+using Windows.Storage.Pickers;
+using Windows.UI.Xaml.Controls;
+using GroupDStegafy.ViewModel;
 
 namespace GroupDStegafy.View
 {
@@ -10,6 +13,21 @@ namespace GroupDStegafy.View
         public MainPage()
         {
             this.InitializeComponent();
+        }
+
+        private async void loadSourceButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var openPicker = new FileOpenPicker
+            {
+                ViewMode = PickerViewMode.Thumbnail,
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary
+            };
+            openPicker.FileTypeFilter.Add(".jpg");
+            openPicker.FileTypeFilter.Add(".png");
+            openPicker.FileTypeFilter.Add(".bmp");
+
+            var file = await openPicker.PickSingleFileAsync();
+            ((MainPageViewModel)DataContext).HandleLoadBitmap(file);
         }
     }
 }

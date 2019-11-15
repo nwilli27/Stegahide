@@ -5,6 +5,7 @@
     xmlns:local="using:GroupDStegafy"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="using:GroupDStegafy.ViewModel"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -15,16 +16,20 @@
         </ResourceDictionary>
     </Page.Resources>
 
+    <Page.DataContext>
+        <viewModel:MainPageViewModel/>
+    </Page.DataContext>
+
     <Canvas>
         <TextBlock Text="Stegafy" TextAlignment="Center" Width="1500" Height="120" Canvas.Top="72" FontSize="72"/>
         <TextBlock Text="Source Image" Canvas.Left="128" Canvas.Top="263" Width="485" TextAlignment="Center"/>
         <TextBlock Text="Secret Message" Canvas.Left="887" Canvas.Top="263" Width="485" TextAlignment="Center"/>
-        <Image Name="sourceImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="48" Canvas.Top="312"/>
+        <Image Name="sourceImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="48" Canvas.Top="312" Source="{Binding Path=SourceWriteableBitmap, Mode=TwoWay}"/>
         <Image Name="secretImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="312" Canvas.ZIndex="1"/>
         <TextBox Name="secretText" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="312" Visibility="Collapsed"/>
-        <Button Name="loadSourceButton" Content="Load" Canvas.Left="48" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
+        <Button Name="loadSourceButton" Content="Load" Canvas.Left="48" Canvas.Top="256" Width="{StaticResource ButtonWidth}" Click="loadSourceButton_Click"/>
         <Button Name="saveSourceButton" Content="Save" IsEnabled="False" Canvas.Left="613" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
-        <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="256" Width="{StaticResource ButtonWidth}" />
+        <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
         <Button Name="saveSecretButton" Content="Save" IsEnabled="False" Canvas.Left="1377" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
         <Button Name="encodeButton" Content="Encode" IsEnabled="False" Canvas.Left="713" Canvas.Top="331" Width="{StaticResource ButtonWidth}"/>
         <Button Name="decodeButton" Content="Decode" IsEnabled="False" Canvas.Left="713" Canvas.Top="484" Width="{StaticResource ButtonWidth}"/>
