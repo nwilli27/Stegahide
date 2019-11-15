@@ -80,6 +80,7 @@ namespace GroupDStegafy.ViewModel
             if (file != null)
             {
                 this.SourceBitmap = await BitmapReader.ReadAndReturnBitmap(file);
+                this.CanSaveSource = false;
             }
         }
 
@@ -93,9 +94,19 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        public void HandleSaveSource(StorageFile file)
+        {
+            if (file != null)
+            {
+                BitmapWriter.SaveWritableBitmap(file, this.SourceBitmap);
+            }
+        }
+
         private void encodeMessage(object obj)
         {
-            throw new NotImplementedException();
+            this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
+            this.OnPropertyChanged(nameof(this.SourceBitmap));
+            this.CanSaveSource = true;
         }
 
         private bool canEncodeMessage(object obj)

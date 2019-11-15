@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
 using GroupDStegafy.ViewModel;
@@ -42,6 +43,18 @@ namespace GroupDStegafy.View
 
             var file = await openPicker.PickSingleFileAsync();
             ((MainPageViewModel)DataContext).HandleLoadSecret(file);
+        }
+
+        private async void saveSourceButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var fileSavePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                SuggestedFileName = "image"
+            };
+            fileSavePicker.FileTypeChoices.Add("PNG files", new List<string> { ".png" });
+            var file = await fileSavePicker.PickSaveFileAsync();
+            ((MainPageViewModel) DataContext).HandleSaveSource(file);
         }
     }
 }

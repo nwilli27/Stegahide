@@ -57,13 +57,13 @@ namespace GroupDStegafy.Model.Image
             this.pixelBytes[offset + 0] = color.B;
         }
 
-        public void EmbedMonochromeImage(bool[] pixels, uint width)
+        public void EmbedMonochromeImage(MonochromeBitmap bitmap)
         {
-            for (var i = 0; i < pixels.Length; i++)
+            for (var i = 0; i < bitmap.Pixels.Length; i++)
             {
-                var pixelColor = this.GetPixelBgra8((int) (i % width), (int) (i / width));
-                pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, pixels[i]);
-                this.SetPixelBgra8((int)(i % width), (int)(i / width), pixelColor);
+                var pixelColor = this.GetPixelBgra8((int) (i % bitmap.Width), (int) (i / bitmap.Width));
+                pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
+                this.SetPixelBgra8((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
             }
         }
 
