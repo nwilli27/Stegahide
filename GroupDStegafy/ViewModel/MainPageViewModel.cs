@@ -11,6 +11,7 @@ namespace GroupDStegafy.ViewModel
     public class MainPageViewModel : INotifyPropertyChanged
     {
         private Bitmap sourceBitmap;
+        private Bitmap secretBitmap;
 
         public Bitmap SourceBitmap
         {
@@ -23,13 +24,34 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
-        public WriteableBitmap SourceWriteableBitmap => this.SourceBitmap?.AsWritableBitmapAsync().Result ?? null;
+        public Bitmap SecretBitmap
+        {
+            get => this.secretBitmap;
+            set
+            {
+                this.secretBitmap = value;
+                this.OnPropertyChanged(nameof(this.SecretBitmap));
+                this.OnPropertyChanged(nameof(this.SecretWriteableBitmap));
+            }
+        }
 
-        public async void HandleLoadBitmap(StorageFile file)
+        public WriteableBitmap SourceWriteableBitmap => this.SourceBitmap?.AsWritableBitmapAsync().Result;
+        public WriteableBitmap SecretWriteableBitmap => this.SecretBitmap?.AsWritableBitmapAsync().Result;
+
+        public async void HandleLoadSource(StorageFile file)
         {
             if (file != null)
             {
                 this.SourceBitmap = await BitmapReader.ReadAndReturnBitmap(file);
+            }
+        }
+
+        public async void HandleLoadSecret(StorageFile file)
+        {
+            if (file != null)
+            {
+                // TODO make sure that the image is either monochrome or text, and handle text appropriately
+                this.SecretBitmap = await BitmapReader.ReadAndReturnBitmap(file);
             }
         }
 

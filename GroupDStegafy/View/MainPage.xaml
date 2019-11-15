@@ -25,11 +25,11 @@
         <TextBlock Text="Source Image" Canvas.Left="128" Canvas.Top="263" Width="485" TextAlignment="Center"/>
         <TextBlock Text="Secret Message" Canvas.Left="887" Canvas.Top="263" Width="485" TextAlignment="Center"/>
         <Image Name="sourceImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="48" Canvas.Top="312" Source="{Binding Path=SourceWriteableBitmap, Mode=TwoWay}"/>
-        <Image Name="secretImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="312" Canvas.ZIndex="1"/>
+        <Image Name="secretImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="312" Source="{Binding Path=SecretWriteableBitmap, Mode=TwoWay}" Canvas.ZIndex="1"/>
         <TextBox Name="secretText" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="312" Visibility="Collapsed"/>
         <Button Name="loadSourceButton" Content="Load" Canvas.Left="48" Canvas.Top="256" Width="{StaticResource ButtonWidth}" Click="loadSourceButton_Click"/>
         <Button Name="saveSourceButton" Content="Save" IsEnabled="False" Canvas.Left="613" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
-        <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
+        <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="256" Width="{StaticResource ButtonWidth}" Click="loadSecretButton_Click"/>
         <Button Name="saveSecretButton" Content="Save" IsEnabled="False" Canvas.Left="1377" Canvas.Top="256" Width="{StaticResource ButtonWidth}"/>
         <Button Name="encodeButton" Content="Encode" IsEnabled="False" Canvas.Left="713" Canvas.Top="331" Width="{StaticResource ButtonWidth}"/>
         <Button Name="decodeButton" Content="Decode" IsEnabled="False" Canvas.Left="713" Canvas.Top="484" Width="{StaticResource ButtonWidth}"/>

@@ -27,7 +27,20 @@ namespace GroupDStegafy.View
             openPicker.FileTypeFilter.Add(".bmp");
 
             var file = await openPicker.PickSingleFileAsync();
-            ((MainPageViewModel)DataContext).HandleLoadBitmap(file);
+            ((MainPageViewModel)DataContext).HandleLoadSource(file);
+        }
+
+        private async void loadSecretButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var openPicker = new FileOpenPicker
+            {
+                ViewMode = PickerViewMode.Thumbnail
+            };
+            openPicker.FileTypeFilter.Add(".bmp");
+            openPicker.FileTypeFilter.Add(".txt");
+
+            var file = await openPicker.PickSingleFileAsync();
+            ((MainPageViewModel)DataContext).HandleLoadSecret(file);
         }
     }
 }
