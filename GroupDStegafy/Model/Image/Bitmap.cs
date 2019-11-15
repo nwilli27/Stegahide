@@ -10,12 +10,12 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class Bitmap
     {
-        public byte[] PixelBytes { get; }
+        private readonly byte[] pixelBytes;
 
         #region Properties
 
         public uint Width { get; }
-        public uint Height => (uint) this.PixelBytes.Length / (4 * this.Width);
+        public uint Height => (uint) this.pixelBytes.Length / (4 * this.Width);
         public uint DpiX { get; }
         public uint DpiY { get; }
 
@@ -23,7 +23,7 @@ namespace GroupDStegafy.Model.Image
 
         public Bitmap(byte[] pixelBytes, uint width, uint dpix, uint dpiy)
         {
-            this.PixelBytes = pixelBytes;
+            this.pixelBytes = pixelBytes;
             this.Width = width;
             this.DpiX = dpix;
             this.DpiY = dpiy;
@@ -34,7 +34,7 @@ namespace GroupDStegafy.Model.Image
             var writeableBitmap = new WriteableBitmap((int)this.Width, (int)this.Height);
             using (var writeStream = writeableBitmap.PixelBuffer.AsStream())
             {
-                await writeStream.WriteAsync(this.PixelBytes, 0, this.PixelBytes.Length);
+                await writeStream.WriteAsync(this.pixelBytes, 0, this.pixelBytes.Length);
                 return writeableBitmap;
             }
         }
@@ -42,19 +42,19 @@ namespace GroupDStegafy.Model.Image
         public Color GetPixelBgra8(int x, int y)
         {
             var offset = (y * (int)this.Width + x) * 4;
-            var r = this.PixelBytes[offset + 2];
-            var g = this.PixelBytes[offset + 1];
-            var b = this.PixelBytes[offset + 0];
+            var r = this.pixelBytes[offset + 2];
+            var g = this.pixelBytes[offset + 1];
+            var b = this.pixelBytes[offset + 0];
             return Color.FromArgb(255, r, g, b);
         }
 
         public void SetPixelBgra8(int x, int y, Color color)
         {
             var offset = (y * (int)this.Width + x) * 4;
-            this.PixelBytes[offset + 3] = color.A;
-            this.PixelBytes[offset + 2] = color.R;
-            this.PixelBytes[offset + 1] = color.G;
-            this.PixelBytes[offset + 0] = color.B;
+            this.pixelBytes[offset + 3] = color.A;
+            this.pixelBytes[offset + 2] = color.R;
+            this.pixelBytes[offset + 1] = color.G;
+            this.pixelBytes[offset + 0] = color.B;
         }
 
         public void EmbedMonochromeImage(bool[] pixels, uint width)
