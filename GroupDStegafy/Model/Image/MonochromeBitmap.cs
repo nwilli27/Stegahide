@@ -14,7 +14,8 @@ namespace GroupDStegafy.Model.Image
             this.Pixels = new bool[source.Width * source.Height];
             for (var i = 0; i < this.Pixels.Length; i++)
             {
-                this.Pixels[i] = !source.GetPixelBgra8((int) (i % this.Width), (int) (i / this.Width)).Equals(Colors.Black);
+                var lsb = (source.GetPixelBgra8((int) (i % this.Width), (int) (i / this.Width)).B & 1) == 1;
+                this.Pixels[i] = lsb;
             }
         }
 

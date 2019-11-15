@@ -91,6 +91,7 @@ namespace GroupDStegafy.ViewModel
                 // TODO handle text files differently
                 var bitmap = await BitmapReader.ReadAndReturnBitmap(file);
                 this.SecretBitmap = new MonochromeBitmap(bitmap);
+                this.CanSaveSecret = false;
             }
         }
 
@@ -99,6 +100,15 @@ namespace GroupDStegafy.ViewModel
             if (file != null)
             {
                 BitmapWriter.SaveWritableBitmap(file, this.SourceBitmap);
+            }
+        }
+
+        public void HandleSaveSecret(StorageFile file)
+        {
+            if (file != null)
+            {
+                // TODO handle saving text
+                BitmapWriter.SaveWritableBitmap(file, this.SecretBitmap.ToBitmap());
             }
         }
 
@@ -116,7 +126,8 @@ namespace GroupDStegafy.ViewModel
 
         private void decodeMessage(object obj)
         {
-            throw new NotImplementedException();
+            this.SecretBitmap = new MonochromeBitmap(this.SourceBitmap);
+            this.CanSaveSecret = true;
         }
 
         private bool canDecodeMessage(object obj)
