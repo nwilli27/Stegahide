@@ -61,12 +61,9 @@ namespace GroupDStegafy.Model.Image
         {
             for (var i = 0; i < pixels.Length; i++)
             {
-                for (var x = 0; x < width; x++)
-                {
-                    var pixelColor = this.GetPixelBgra8(x, (int) (i / width));
-                    pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, pixels[i]);
-                    this.SetPixelBgra8(x, (int) (i / width), pixelColor);
-                }
+                var pixelColor = this.GetPixelBgra8((int) (i % width), (int) (i / width));
+                pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, pixels[i]);
+                this.SetPixelBgra8((int)(i % width), (int)(i / width), pixelColor);
             }
         }
 

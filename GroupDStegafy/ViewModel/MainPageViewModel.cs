@@ -14,11 +14,13 @@ namespace GroupDStegafy.ViewModel
         private Bitmap sourceBitmap;
         private MonochromeBitmap secretBitmap;
         private string secretText;
+        private bool canSaveSource;
+        private bool canSaveSecret;
 
         public Bitmap SourceBitmap
         {
             get => this.sourceBitmap;
-            set
+            private set
             {
                 this.sourceBitmap = value;
                 this.OnPropertyChanged(nameof(this.SourceBitmap));
@@ -31,7 +33,7 @@ namespace GroupDStegafy.ViewModel
         public MonochromeBitmap SecretBitmap
         {
             get => this.secretBitmap;
-            set
+            private set
             {
                 this.secretBitmap = value;
                 this.OnPropertyChanged(nameof(this.SecretBitmap));
@@ -43,6 +45,26 @@ namespace GroupDStegafy.ViewModel
         public WriteableBitmap SourceWriteableBitmap => this.SourceBitmap?.AsWritableBitmapAsync().Result;
 
         public WriteableBitmap SecretWriteableBitmap => this.secretBitmap?.ToBitmap().AsWritableBitmapAsync().Result;
+
+        public bool CanSaveSource
+        {
+            get => this.canSaveSource;
+            private set
+            {
+                this.canSaveSource = value;
+                this.OnPropertyChanged(nameof(this.CanSaveSource));
+            }
+        }
+
+        public bool CanSaveSecret
+        {
+            get => this.canSaveSecret;
+            private set
+            {
+                this.canSaveSecret = value;
+                this.OnPropertyChanged(nameof(this.CanSaveSecret));
+            }
+        }
 
         public RelayCommand EncodeCommand { get; }
         public RelayCommand DecodeCommand { get; }
