@@ -16,12 +16,12 @@ namespace GroupDStegafy.Model.Image
 
         public uint Width { get; }
         public uint Height => (uint) this.pixelBytes.Length / (4 * this.Width);
-        public uint DpiX { get; }
-        public uint DpiY { get; }
+        public double DpiX { get; }
+        public double DpiY { get; }
 
         #endregion
 
-        public Bitmap(byte[] pixelBytes, uint width, uint dpix, uint dpiy)
+        public Bitmap(byte[] pixelBytes, uint width, double dpix, double dpiy)
         {
             this.pixelBytes = pixelBytes;
             this.Width = width;
@@ -39,7 +39,7 @@ namespace GroupDStegafy.Model.Image
             }
         }
 
-        public Color GetPixelBgra8(int x, int y)
+        public Color GetPixelColor(int x, int y)
         {
             var offset = (y * (int)this.Width + x) * 4;
             var r = this.pixelBytes[offset + 2];
@@ -48,7 +48,7 @@ namespace GroupDStegafy.Model.Image
             return Color.FromArgb(255, r, g, b);
         }
 
-        public void SetPixelBgra8(int x, int y, Color color)
+        public void SetPixelColor(int x, int y, Color color)
         {
             var offset = (y * (int)this.Width + x) * 4;
             this.pixelBytes[offset + 3] = color.A;
@@ -61,9 +61,9 @@ namespace GroupDStegafy.Model.Image
         {
             for (var i = 0; i < bitmap.Pixels.Length; i++)
             {
-                var pixelColor = this.GetPixelBgra8((int) (i % bitmap.Width), (int) (i / bitmap.Width));
+                var pixelColor = this.GetPixelColor((int) (i % bitmap.Width), (int) (i / bitmap.Width));
                 pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
-                this.SetPixelBgra8((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
+                this.SetPixelColor((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
             }
         }
 

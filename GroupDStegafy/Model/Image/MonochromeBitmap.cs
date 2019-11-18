@@ -14,7 +14,7 @@ namespace GroupDStegafy.Model.Image
             this.Pixels = new bool[source.Width * source.Height];
             for (var i = 0; i < this.Pixels.Length; i++)
             {
-                var lsb = (source.GetPixelBgra8((int) (i % this.Width), (int) (i / this.Width)).B & 1) == 1;
+                var lsb = (source.GetPixelColor((int) (i % this.Width), (int) (i / this.Width)).B & 1) == 1;
                 this.Pixels[i] = lsb;
             }
         }
@@ -25,7 +25,7 @@ namespace GroupDStegafy.Model.Image
             var bitmap = new Bitmap(bytes, this.Width, 1, 1);
             for (var i = 0; i < this.Pixels.Length; i++)
             {
-                bitmap.SetPixelBgra8((int) (i % this.Width), (int)(i / this.Width), this.Pixels[i] ? Colors.White : Colors.Black);
+                bitmap.SetPixelColor((int) (i % this.Width), (int)(i / this.Width), this.Pixels[i] ? Colors.White : Colors.Black);
             }
 
             return bitmap;

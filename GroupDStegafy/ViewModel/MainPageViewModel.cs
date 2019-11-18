@@ -79,7 +79,7 @@ namespace GroupDStegafy.ViewModel
         {
             if (file != null)
             {
-                this.SourceBitmap = await BitmapReader.ReadAndReturnBitmap(file);
+                this.SourceBitmap = await BitmapReader.ReadBitmap(file);
                 this.CanSaveSource = false;
             }
         }
@@ -89,7 +89,7 @@ namespace GroupDStegafy.ViewModel
             if (file != null)
             {
                 // TODO handle text files differently
-                var bitmap = await BitmapReader.ReadAndReturnBitmap(file);
+                var bitmap = await BitmapReader.ReadBitmap(file);
                 this.SecretBitmap = new MonochromeBitmap(bitmap);
                 this.CanSaveSecret = false;
             }
@@ -99,7 +99,7 @@ namespace GroupDStegafy.ViewModel
         {
             if (file != null)
             {
-                BitmapWriter.SaveWritableBitmap(file, this.SourceBitmap);
+                BitmapWriter.WriteBitmap(file, this.SourceBitmap);
             }
         }
 
@@ -108,7 +108,7 @@ namespace GroupDStegafy.ViewModel
             if (file != null)
             {
                 // TODO handle saving text
-                BitmapWriter.SaveWritableBitmap(file, this.SecretBitmap.ToBitmap());
+                BitmapWriter.WriteBitmap(file, this.SecretBitmap.ToBitmap());
             }
         }
 

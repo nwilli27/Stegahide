@@ -16,7 +16,7 @@ namespace GroupDStegafy.FileIO
         ///     Precondition: 
         /// </summary>
         /// <param name="bitmap">The modified image.</param>
-        public static async void SaveWritableBitmap(StorageFile savefile, Bitmap bitmap)
+        public static async void WriteBitmap(StorageFile savefile, Bitmap bitmap)
         {
             var modifiedImage = await bitmap.AsWritableBitmapAsync();
             var stream = await savefile.OpenAsync(FileAccessMode.ReadWrite);

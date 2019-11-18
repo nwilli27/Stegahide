@@ -23,7 +23,7 @@ namespace GroupDStegafy.FileIO
         /// <returns>
         ///     A Bitmap object with now a writable bitmap image
         /// </returns>
-        public static async Task<Bitmap> ReadAndReturnBitmap(StorageFile sourceImageFile)
+        public static async Task<Bitmap> ReadBitmap(StorageFile sourceImageFile)
         {
             var bitmapImage = await sourceImageFile.ToBitmapImageAsync();
 
