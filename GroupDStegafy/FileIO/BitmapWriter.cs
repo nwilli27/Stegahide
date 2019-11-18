@@ -12,12 +12,22 @@ namespace GroupDStegafy.FileIO
     public static class BitmapWriter
     {
         /// <summary>
-        ///     Saves the writable bitmap image that is passed in.
-        ///     Precondition: 
+        ///     Saves the bitmap to the specified file.
+        ///     Precondition: Save file and bitmap are not null
+        ///     Postcondition: Bitmap is saved to disk
         /// </summary>
+        /// <param name="saveFile">The save file.</param>
         /// <param name="bitmap">The modified image.</param>
         public static async void WriteBitmap(StorageFile saveFile, Bitmap bitmap)
         {
+            if (bitmap == null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+            if (saveFile == null)
+            {
+                throw new ArgumentNullException(nameof(saveFile));
+            }
             var modifiedImage = await bitmap.AsWritableBitmapAsync();
             var stream = await saveFile.OpenAsync(FileAccessMode.ReadWrite);
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);

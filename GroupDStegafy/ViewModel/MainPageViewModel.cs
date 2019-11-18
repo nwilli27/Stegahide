@@ -17,6 +17,12 @@ namespace GroupDStegafy.ViewModel
         private bool canSaveSource;
         private bool canSaveSecret;
 
+        /// <summary>
+        ///     Gets the source bitmap.
+        /// </summary>
+        /// <value>
+        ///     The source bitmap.
+        /// </value>
         public Bitmap SourceBitmap
         {
             get => this.sourceBitmap;
@@ -30,6 +36,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Gets the secret bitmap.
+        /// </summary>
+        /// <value>
+        ///     The secret bitmap.
+        /// </value>
         public MonochromeBitmap SecretBitmap
         {
             get => this.secretBitmap;
@@ -42,10 +54,28 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Gets the source bitmap as a WritableBitmap.
+        /// </summary>
+        /// <value>
+        ///     The source bitmap as a WritableBitmap.
+        /// </value>
         public WriteableBitmap SourceWriteableBitmap => this.SourceBitmap?.AsWritableBitmapAsync().Result;
 
+        /// <summary>
+        ///     Gets the secret bitmap as a WritableBitmap.
+        /// </summary>
+        /// <value>
+        ///     The secret bitmap as a WritableBitmap.
+        /// </value>
         public WriteableBitmap SecretWriteableBitmap => this.secretBitmap?.ToBitmap().AsWritableBitmapAsync().Result;
 
+        /// <summary>
+        ///     Gets a value indicating whether the source image can be saved.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can save source; otherwise, <c>false</c>.
+        /// </value>
         public bool CanSaveSource
         {
             get => this.canSaveSource;
@@ -56,6 +86,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Gets a value indicating whether the decoded secret image or text can be saved.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance can save secret; otherwise, <c>false</c>.
+        /// </value>
         public bool CanSaveSecret
         {
             get => this.canSaveSecret;
@@ -66,15 +102,36 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Gets the encode command.
+        /// </summary>
+        /// <value>
+        ///     The encode command.
+        /// </value>
         public RelayCommand EncodeCommand { get; }
+        /// <summary>
+        ///     Gets the decode command.
+        /// </summary>
+        /// <value>
+        ///     The decode command.
+        /// </value>
         public RelayCommand DecodeCommand { get; }
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MainPageViewModel"/> class.
+        /// </summary>
         public MainPageViewModel()
         {
             this.EncodeCommand = new RelayCommand(this.encodeMessage, this.canEncodeMessage);
             this.DecodeCommand = new RelayCommand(this.decodeMessage, this.canDecodeMessage);
         }
 
+        /// <summary>
+        ///     Handles loading the source image file.
+        ///     Precondition: None
+        ///     Postcondition: The source image file is loaded, this.CanSaveSource = false
+        /// </summary>
+        /// <param name="file">The file.</param>
         public async void HandleLoadSource(StorageFile file)
         {
             if (file != null)
@@ -84,6 +141,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Handles loading the secret.
+        ///     Precondition: None
+        ///     Postcondition: The secret is loaded, this.CanSaveSecret = false
+        /// </summary>
+        /// <param name="file">The file.</param>
         public async void HandleLoadSecret(StorageFile file)
         {
             if (file != null)
@@ -95,6 +158,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Handles saving the source image, now with an embedded secret, to a file.
+        ///     Precondition: None
+        ///     Postcondition: The source image is saved to disk.
+        /// </summary>
+        /// <param name="file">The file.</param>
         public void HandleSaveSource(StorageFile file)
         {
             if (file != null)
@@ -103,6 +172,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        ///     Handles saving the extracted secret to a file.
+        ///     Precondition: None
+        ///     Postcondition: The secret is saved to disk.
+        /// </summary>
+        /// <param name="file">The file.</param>
         public void HandleSaveSecret(StorageFile file)
         {
             if (file != null)
@@ -137,6 +212,10 @@ namespace GroupDStegafy.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        ///     Called when an observable property changes.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

@@ -17,14 +17,18 @@ namespace GroupDStegafy.FileIO
         /// <summary>
         ///     Reads in an source image, makes a copy and transforms it   
         ///     to a writable image and returns a Bitmap object.
-        ///     Precondition: none
-        ///     Post-condition: none
+        ///     Precondition: Source image file is not null
+        ///     Postcondition: None
         /// </summary>
         /// <returns>
         ///     A Bitmap object with now a writable bitmap image
         /// </returns>
         public static async Task<Bitmap> ReadBitmap(StorageFile sourceImageFile)
         {
+            if (sourceImageFile == null)
+            {
+                throw new ArgumentNullException(nameof(sourceImageFile));
+            }
             var bitmapImage = await sourceImageFile.ToBitmapImageAsync();
 
             using (var fileStream = await sourceImageFile.OpenAsync(FileAccessMode.Read))

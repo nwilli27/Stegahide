@@ -15,13 +15,47 @@ namespace GroupDStegafy.Model.Image
 
         #region Properties
 
+        /// <summary>
+        ///     Gets the width.
+        /// </summary>
+        /// <value>
+        ///     The width.
+        /// </value>
         public uint Width { get; }
+        /// <summary>
+        ///     Gets the height.
+        /// </summary>
+        /// <value>
+        ///     The height.
+        /// </value>
         public uint Height => (uint) this.pixelBytes.Length / (4 * this.Width);
+        /// <summary>
+        ///     Gets the horizontal DPI of the image.
+        /// </summary>
+        /// <value>
+        ///     The horizontal DPI.
+        /// </value>
         public double DpiX { get; }
+        /// <summary>
+        ///     Gets the vertical DPI of the image.
+        /// </summary>
+        /// <value>
+        ///     The vertical DPI.
+        /// </value>
         public double DpiY { get; }
 
         #endregion
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="Bitmap"/> class.
+        ///     Precondition: pixelBytes is not null
+        ///     Postcondition: image is built
+        /// </summary>
+        /// <param name="pixelBytes">The pixel bytes.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="dpix">The dpix.</param>
+        /// <param name="dpiy">The dpiy.</param>
+        /// <exception cref="ArgumentNullException">pixelBytes</exception>
         public Bitmap(byte[] pixelBytes, uint width, double dpix, double dpiy)
         {
             this.pixelBytes = pixelBytes ?? throw new ArgumentNullException(nameof(pixelBytes));
@@ -30,6 +64,10 @@ namespace GroupDStegafy.Model.Image
             this.DpiY = dpiy;
         }
 
+        /// <summary>
+        ///     Converts the bitmap to a writable bitmap asynchronously.
+        /// </summary>
+        /// <returns>This bitmap as a writable bitmap</returns>
         public async Task<WriteableBitmap> AsWritableBitmapAsync()
         {
             var writeableBitmap = new WriteableBitmap((int)this.Width, (int)this.Height);
@@ -40,6 +78,14 @@ namespace GroupDStegafy.Model.Image
             }
         }
 
+        /// <summary>
+        ///     Gets the color of the specified pixel.
+        ///     Precondition: Pixel is within image bounds
+        ///     Postcondition: None
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns>The color of the pixel</returns>
         public Color GetPixelColor(int x, int y)
         {
             this.checkBounds(x, y);
@@ -50,6 +96,14 @@ namespace GroupDStegafy.Model.Image
             return Color.FromArgb(255, r, g, b);
         }
 
+        /// <summary>
+        ///     Sets the color of the specified pixel.
+        ///     Precondition: Pixel is within image bounds
+        ///     Postcondition: Color of the pixel is changed
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="color">The color.</param>
         public void SetPixelColor(int x, int y, Color color)
         {
             this.checkBounds(x, y);
@@ -60,12 +114,23 @@ namespace GroupDStegafy.Model.Image
             this.pixelBytes[offset + 0] = color.B;
         }
 
+        /// <summary>
+        ///     Embeds a monochrome image into the least significant bit of the blue channel of this image.
+        ///     Precondition: monochrome bitmap is not null
+        ///     Postcondition: image is embedded
+        /// </summary>
+        /// <param name="bitmap">The bitmap.</param>
+        /// <exception cref="ArgumentNullException">bitmap</exception>
         public void EmbedMonochromeImage(MonochromeBitmap bitmap)
         {
+            if (bitmap == null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
             for (var i = 0; i < bitmap.Pixels.Length; i++)
             {
                 var pixelColor = this.GetPixelColor((int) (i % bitmap.Width), (int) (i / bitmap.Width));
-                pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
+                pixelColor.B = changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
                 this.SetPixelColor((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
             }
         }
@@ -82,7 +147,7 @@ namespace GroupDStegafy.Model.Image
             }
         }
 
-        private byte changeLeastSignificantBit(byte input, bool white)
+        private static byte changeLeastSignificantBit(byte input, bool white)
         {
             if (white)
             {
