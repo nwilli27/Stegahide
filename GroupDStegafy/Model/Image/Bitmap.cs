@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
@@ -23,7 +24,7 @@ namespace GroupDStegafy.Model.Image
 
         public Bitmap(byte[] pixelBytes, uint width, double dpix, double dpiy)
         {
-            this.pixelBytes = pixelBytes;
+            this.pixelBytes = pixelBytes ?? throw new ArgumentNullException(nameof(pixelBytes));
             this.Width = width;
             this.DpiX = dpix;
             this.DpiY = dpiy;
@@ -41,6 +42,7 @@ namespace GroupDStegafy.Model.Image
 
         public Color GetPixelColor(int x, int y)
         {
+            this.checkBounds(x, y);
             var offset = (y * (int)this.Width + x) * 4;
             var r = this.pixelBytes[offset + 2];
             var g = this.pixelBytes[offset + 1];
@@ -50,6 +52,7 @@ namespace GroupDStegafy.Model.Image
 
         public void SetPixelColor(int x, int y, Color color)
         {
+            this.checkBounds(x, y);
             var offset = (y * (int)this.Width + x) * 4;
             this.pixelBytes[offset + 3] = color.A;
             this.pixelBytes[offset + 2] = color.R;
@@ -64,6 +67,18 @@ namespace GroupDStegafy.Model.Image
                 var pixelColor = this.GetPixelColor((int) (i % bitmap.Width), (int) (i / bitmap.Width));
                 pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
                 this.SetPixelColor((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
+            }
+        }
+
+        private void checkBounds(int x, int y)
+        {
+            if (x < 0 || x >= this.Width)
+            {
+                throw new ArgumentOutOfRangeException(nameof(x), "X must be within image bounds");
+            }
+            if (y < 0 || y >= this.Height)
+            {
+                throw new ArgumentOutOfRangeException(nameof(y), "Y must be within image bounds");
             }
         }
 

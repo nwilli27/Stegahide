@@ -16,10 +16,10 @@ namespace GroupDStegafy.FileIO
         ///     Precondition: 
         /// </summary>
         /// <param name="bitmap">The modified image.</param>
-        public static async void WriteBitmap(StorageFile savefile, Bitmap bitmap)
+        public static async void WriteBitmap(StorageFile saveFile, Bitmap bitmap)
         {
             var modifiedImage = await bitmap.AsWritableBitmapAsync();
-            var stream = await savefile.OpenAsync(FileAccessMode.ReadWrite);
+            var stream = await saveFile.OpenAsync(FileAccessMode.ReadWrite);
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
 
             var pixelStream = modifiedImage.PixelBuffer.AsStream();
