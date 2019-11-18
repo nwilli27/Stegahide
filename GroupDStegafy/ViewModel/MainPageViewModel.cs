@@ -4,8 +4,8 @@ using System.Runtime.CompilerServices;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
+using GroupDStegafy.FileIO;
 using GroupDStegafy.Model.Image;
-using GroupDStegafy.Model.IO;
 
 namespace GroupDStegafy.ViewModel
 {

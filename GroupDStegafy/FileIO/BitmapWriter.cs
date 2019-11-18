@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using GroupDStegafy.Model.Image;
 
-namespace GroupDStegafy.Model.IO
+namespace GroupDStegafy.FileIO
 {
     /// <summary>
     ///     Responsible for the writing of an image (bitmap, .png)

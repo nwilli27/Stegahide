@@ -128,8 +128,8 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Image\Bitmap.cs" />
-    <Compile Include="Model\IO\BitmapReader.cs" />
-    <Compile Include="Model\IO\BitmapWriter.cs" />
+    <Compile Include="FileIO\BitmapReader.cs" />
+    <Compile Include="FileIO\BitmapWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

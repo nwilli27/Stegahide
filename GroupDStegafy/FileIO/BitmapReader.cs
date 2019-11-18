@@ -5,7 +5,7 @@ using Windows.Storage;
 using GroupDStegafy.Model.Extensions;
 using GroupDStegafy.Model.Image;
 
-namespace GroupDStegafy.Model.IO
+namespace GroupDStegafy.FileIO
 {
     /// <summary>
     ///     Responsible for the reading in of an image (bitmap, .png)
