@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
@@ -10,6 +11,7 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class Bitmap : Image
     {
+
         #region Data Members
 
         private readonly byte[] pixelBytes;
@@ -45,9 +47,11 @@ namespace GroupDStegafy.Model.Image
         /// <param name="width">The width.</param>
         /// <param name="dpix">The dpix.</param>
         /// <param name="dpiy">The dpiy.</param>
+        /// <exception cref="ArgumentNullException">pixelBytes</exception>
         public Bitmap(byte[] pixelBytes, uint width, uint dpix, uint dpiy)
         {
-            this.pixelBytes = pixelBytes;
+            this.pixelBytes = pixelBytes ?? throw new ArgumentNullException(nameof(pixelBytes));
+
             this.Width = width;
             this.Height = (uint)this.pixelBytes.Length / (4 * this.Width);
             this.DpiX = dpix;
@@ -80,8 +84,10 @@ namespace GroupDStegafy.Model.Image
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <returns>A color object with its bgra8 values.</returns>
-        public Color GetPixelBgra8(int x, int y)
+        public Color GetPixelColor(int x, int y)
         {
+            this.checkBounds(x, y);
+
             var offset = (y * (int)this.Width + x) * 4;
             var r = this.pixelBytes[offset + 2];
             var g = this.pixelBytes[offset + 1];
@@ -97,8 +103,10 @@ namespace GroupDStegafy.Model.Image
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
         /// <param name="color">The color.</param>
-        public void SetPixelBgra8(int x, int y, Color color)
+        public void SetPixelColor(int x, int y, Color color)
         {
+            this.checkBounds(x, y);
+
             var offset = (y * (int)this.Width + x) * 4;
             this.pixelBytes[offset + 3] = color.A;
             this.pixelBytes[offset + 2] = color.R;
@@ -115,11 +123,16 @@ namespace GroupDStegafy.Model.Image
         /// <param name="bitmap">The bitmap.</param>
         public void EmbedMonochromeImage(MonochromeBitmap bitmap)
         {
+            if (bitmap == null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
             for (var i = 0; i < bitmap.Pixels.Length; i++)
             {
-                var pixelColor = this.GetPixelBgra8((int) (i % bitmap.Width), (int) (i / bitmap.Width));
-                pixelColor.B = this.changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
-                this.SetPixelBgra8((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
+                var pixelColor = this.GetPixelColor((int) (i % bitmap.Width), (int) (i / bitmap.Width));
+                pixelColor.B = changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
+                this.SetPixelColor((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
             }
         }
 
@@ -127,7 +140,19 @@ namespace GroupDStegafy.Model.Image
 
         #region Private Helpers
 
-        private byte changeLeastSignificantBit(byte input, bool isWhite)
+        private void checkBounds(int x, int y)
+        {
+            if (x < 0 || x >= this.Width)
+            {
+                throw new ArgumentOutOfRangeException(nameof(x), "X must be within image bounds");
+            }
+            if (y < 0 || y >= this.Height)
+            {
+                throw new ArgumentOutOfRangeException(nameof(y), "Y must be within image bounds");
+            }
+        }
+
+        private static byte changeLeastSignificantBit(byte input, bool isWhite)
         {
             var changeLastBitTo0 = (byte) (input & 0xFE);
             var changeLastBitTo1 = (byte) (input | 1);

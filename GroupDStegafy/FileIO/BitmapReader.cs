@@ -5,7 +5,7 @@ using Windows.Storage;
 using GroupDStegafy.Model.Extensions;
 using GroupDStegafy.Model.Image;
 
-namespace GroupDStegafy.Model.IO
+namespace GroupDStegafy.FileIO
 {
     /// <summary>
     ///     Responsible for the reading in of an image (bitmap, .png)
@@ -17,14 +17,18 @@ namespace GroupDStegafy.Model.IO
         /// <summary>
         ///     Reads in an source image, makes a copy and transforms it   
         ///     to a writable image and returns a Bitmap object.
-        ///     Precondition: none
-        ///     Post-condition: none
+        ///     Precondition: Source image file is not null
+        ///     Postcondition: None
         /// </summary>
         /// <returns>
         ///     A Bitmap object with now a writable bitmap image
         /// </returns>
-        public static async Task<Bitmap> ReadAndReturnBitmap(StorageFile sourceImageFile)
+        public static async Task<Bitmap> ReadBitmap(StorageFile sourceImageFile)
         {
+            if (sourceImageFile == null)
+            {
+                throw new ArgumentNullException(nameof(sourceImageFile));
+            }
             var bitmapImage = await sourceImageFile.ToBitmapImageAsync();
 
             using (var fileStream = await sourceImageFile.OpenAsync(FileAccessMode.Read))

@@ -59,7 +59,7 @@ namespace GroupDStegafy.Model.Image
             for (var i = 0; i < this.Pixels.Length; i++)
             {
                 var negatedColor = this.Pixels[i] ? Colors.White : Colors.Black;
-                bitmap.SetPixelBgra8((int) (i % this.Width), (int)(i / this.Width), negatedColor);
+                bitmap.SetPixelColor((int) (i % this.Width), (int)(i / this.Width), negatedColor);
             }
 
             return bitmap;
@@ -73,9 +73,8 @@ namespace GroupDStegafy.Model.Image
         {
             for (var i = 0; i < this.Pixels.Length; i++)
             {
-                var pixelBlueByteValue = (source.GetPixelBgra8((int)(i % this.Width), (int)(i / this.Width)).B & 1);
-                var isPixelWhite = pixelBlueByteValue == 1;
-                this.Pixels[i] = isPixelWhite;
+                var pixelBlueByteValue = (source.GetPixelColor((int)(i % this.Width), (int)(i / this.Width)).B & 1);
+                this.Pixels[i] = pixelBlueByteValue == 1;
             }
         }
 
