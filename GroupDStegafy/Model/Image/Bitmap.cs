@@ -79,14 +79,16 @@ namespace GroupDStegafy.Model.Image
         }
 
         /// <summary>
-        ///     Gets the pixel bgra8 color values.
+        ///     Gets the color of the pixel at the specified coordinates.
+        ///     Precondition: X and Y are within image bounds
+        ///     Postcondition: None
         /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
-        /// <returns>A color object with its bgra8 values.</returns>
-        public Color GetPixelColor(int x, int y)
+        /// <returns>The color of the specified pixel.</returns>
+        public override Color GetPixelColor(int x, int y)
         {
-            this.checkBounds(x, y);
+            this.CheckBounds(x, y);
 
             var offset = (y * (int)this.Width + x) * 4;
             var r = this.pixelBytes[offset + 2];
@@ -105,7 +107,7 @@ namespace GroupDStegafy.Model.Image
         /// <param name="color">The color.</param>
         public void SetPixelColor(int x, int y, Color color)
         {
-            this.checkBounds(x, y);
+            this.CheckBounds(x, y);
 
             var offset = (y * (int)this.Width + x) * 4;
             this.pixelBytes[offset + 3] = color.A;
@@ -128,30 +130,21 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
-            for (var i = 0; i < bitmap.Pixels.Length; i++)
+            for (var x = 0; x < bitmap.Width; x++)
             {
-                var pixelColor = this.GetPixelColor((int) (i % bitmap.Width), (int) (i / bitmap.Width));
-                //TODO could maybe make this an extension for a Color object.
-                pixelColor.B = changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
-                this.SetPixelColor((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
+                for (var y = 0; y < bitmap.Height; y++)
+                {
+                    var pixelColor = this.GetPixelColor(x, y);
+                    //TODO could maybe make this an extension for a Color object.
+                    pixelColor.B = changeLeastSignificantBit(pixelColor.B, bitmap.GetPixelColor(x, y).Equals(Colors.White));
+                    this.SetPixelColor(x, y, pixelColor);
+                }
             }
         }
 
         #endregion
 
         #region Private Helpers
-
-        private void checkBounds(int x, int y)
-        {
-            if (x < 0 || x >= this.Width)
-            {
-                throw new ArgumentOutOfRangeException(nameof(x), "X must be within image bounds");
-            }
-            if (y < 0 || y >= this.Height)
-            {
-                throw new ArgumentOutOfRangeException(nameof(y), "Y must be within image bounds");
-            }
-        }
 
         private static byte changeLeastSignificantBit(byte input, bool isWhite)
         {

@@ -8,43 +8,68 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class MonochromeBitmap : Image
     {
-
         #region Properties 
 
-        /// <summary>
-        /// Gets the pixels.
-        /// </summary>
-        /// <value>
-        /// The pixels.
-        /// </value>
-        public bool[] Pixels { get; }
+        private readonly bool[] pixels;
 
         #endregion
 
         #region Constructors
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="MonochromeBitmap"/> class.
-        ///     Precondition: source != null
-        ///     Post-condition: none
-        /// </summary>
-        /// <param name="source">The source.</param>
-        public MonochromeBitmap(Bitmap source)
+        private MonochromeBitmap(bool[] pixels, uint width, uint height)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            this.Width = source.Width;
-            this.Pixels = new bool[source.Width * source.Height];
-
-            this.changePixelsToMonochrome(source);
+            this.pixels = pixels ?? throw new ArgumentNullException(nameof(pixels));
+            this.Width = width;
+            this.Height = height;
         }
 
         #endregion
 
         #region Methods
+
+        /// <summary>
+        ///     Creates a monochrome image from a bitmap, where all non-black pixels are white, and returns it.
+        ///     Precondition: source is not null
+        ///     Postcondition: None
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>A monochrome image.</returns>
+        /// <exception cref="ArgumentNullException">source</exception>
+        public static MonochromeBitmap FromBitmap(Bitmap source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            var pixels = new bool[source.Width * source.Height];
+            for (var x = 0; x < source.Width; x++)
+            {
+                for (var y = 0; y < source.Height; y++)
+                {
+                    var isWhite = !source.GetPixelColor(x, y).Equals(Colors.Black);
+                    pixels[y*source.Width + x] = isWhite;
+                }
+            }
+            return new MonochromeBitmap(pixels, source.Width, source.Height);
+        }
+
+        public static MonochromeBitmap FromEmbeddedSecret(Bitmap source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            var pixels = new bool[source.Width * source.Height];
+            for (var x = 0; x < source.Width; x++)
+            {
+                for (var y = 0; y < source.Height; y++)
+                {
+                    var isWhite = (source.GetPixelColor(x, y).B & 1) == 1;
+                    pixels[y * source.Width + x] = isWhite;
+                }
+            }
+            return new MonochromeBitmap(pixels, source.Width, source.Height);
+        }
 
         /// <summary>
         ///     Converts the monochrome image to the standard Bitmap image.
@@ -54,11 +79,11 @@ namespace GroupDStegafy.Model.Image
         /// <returns>The original bitmap image.</returns>
         public Bitmap ToBitmap()
         {
-            var bytes = new byte[this.Pixels.Length * 4];
+            var bytes = new byte[this.pixels.Length * 4];
             var bitmap = new Bitmap(bytes, this.Width, 1, 1);
-            for (var i = 0; i < this.Pixels.Length; i++)
+            for (var i = 0; i < this.pixels.Length; i++)
             {
-                var negatedColor = this.Pixels[i] ? Colors.White : Colors.Black;
+                var negatedColor = this.pixels[i] ? Colors.White : Colors.Black;
                 bitmap.SetPixelColor((int) (i % this.Width), (int)(i / this.Width), negatedColor);
             }
 
@@ -67,17 +92,21 @@ namespace GroupDStegafy.Model.Image
 
         #endregion
 
-        #region Private Helpers
-
-        private void changePixelsToMonochrome(Bitmap source)
+        /// <summary>
+        ///     Gets the color of the pixel at the specified coordinates.
+        ///     Precondition: X and Y are within image bounds
+        ///     Postcondition: None
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns>
+        /// The color of the specified pixel.
+        /// </returns>
+        public override Color GetPixelColor(int x, int y)
         {
-            for (var i = 0; i < this.Pixels.Length; i++)
-            {
-                var pixelBlueByteValue = (source.GetPixelColor((int)(i % this.Width), (int)(i / this.Width)).B & 1);
-                this.Pixels[i] = pixelBlueByteValue == 1;
-            }
+            this.CheckBounds(x, y);
+            var pixel = this.pixels[y*this.Width + x];
+            return pixel ? Colors.White : Colors.Black;
         }
-
-        #endregion
     }
 }

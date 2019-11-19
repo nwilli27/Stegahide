@@ -171,7 +171,7 @@ namespace GroupDStegafy.ViewModel
             {
                 // TODO handle text files differently
                 var bitmap = await BitmapReader.ReadBitmap(file);
-                this.SecretBitmap = new MonochromeBitmap(bitmap);
+                this.SecretBitmap = MonochromeBitmap.FromBitmap(bitmap);
                 this.CanSaveSecret = false;
             }
         }
@@ -223,7 +223,7 @@ namespace GroupDStegafy.ViewModel
 
         private void decodeMessage(object obj)
         {
-            this.SecretBitmap = new MonochromeBitmap(this.SourceBitmap);
+            this.SecretBitmap = MonochromeBitmap.FromEmbeddedSecret(this.SourceBitmap);
             this.CanSaveSecret = true;
         }
 
@@ -236,6 +236,10 @@ namespace GroupDStegafy.ViewModel
 
         #region Events
 
+        /// <summary>
+        ///     Occurs when a property value changes.
+        /// </summary>
+        /// <returns></returns>
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
