@@ -14,6 +14,8 @@ namespace GroupDStegafy.View
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        #region Constructors
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainPage"/> class.
         /// </summary>
@@ -21,6 +23,10 @@ namespace GroupDStegafy.View
         {
             this.InitializeComponent();
         }
+
+        #endregion
+
+        #region Events
 
         private async void loadSourceButton_Click(object sender, RoutedEventArgs e)
         {
@@ -62,8 +68,11 @@ namespace GroupDStegafy.View
             // TODO handle saving text
             var file = await this.promptSaveImage();
             ((MainPageViewModel)DataContext).HandleSaveSecret(file);
-
         }
+
+        #endregion
+
+        #region Private Helpers
 
         private async Task<StorageFile> promptSaveImage()
         {
@@ -76,5 +85,7 @@ namespace GroupDStegafy.View
             var file = await fileSavePicker.PickSaveFileAsync();
             return file;
         }
+
+        #endregion
     }
 }

@@ -131,6 +131,7 @@ namespace GroupDStegafy.Model.Image
             for (var i = 0; i < bitmap.Pixels.Length; i++)
             {
                 var pixelColor = this.GetPixelColor((int) (i % bitmap.Width), (int) (i / bitmap.Width));
+                //TODO could maybe make this an extension for a Color object.
                 pixelColor.B = changeLeastSignificantBit(pixelColor.B, bitmap.Pixels[i]);
                 this.SetPixelColor((int)(i % bitmap.Width), (int)(i / bitmap.Width), pixelColor);
             }

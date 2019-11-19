@@ -9,13 +9,23 @@ using GroupDStegafy.Model.Image;
 
 namespace GroupDStegafy.ViewModel
 {
+    /// <summary>
+    ///     Class responsible for the view to model interaction.
+    /// </summary>
+    /// <seealso cref="INotifyPropertyChanged" />
     public class MainPageViewModel : INotifyPropertyChanged
     {
+        #region Data Members 
+
         private Bitmap sourceBitmap;
         private MonochromeBitmap secretBitmap;
-        private string secretText;
+        private readonly string secretText;
         private bool canSaveSource;
         private bool canSaveSecret;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         ///     Gets the source bitmap.
@@ -117,6 +127,10 @@ namespace GroupDStegafy.ViewModel
         /// </value>
         public RelayCommand DecodeCommand { get; }
 
+        #endregion
+
+        #region Constructors
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="MainPageViewModel"/> class.
         /// </summary>
@@ -125,6 +139,10 @@ namespace GroupDStegafy.ViewModel
             this.EncodeCommand = new RelayCommand(this.encodeMessage, this.canEncodeMessage);
             this.DecodeCommand = new RelayCommand(this.decodeMessage, this.canDecodeMessage);
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         ///     Handles loading the source image file.
@@ -187,6 +205,10 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        #endregion
+
+        #region Private Helpers
+
         private void encodeMessage(object obj)
         {
             this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
@@ -210,6 +232,10 @@ namespace GroupDStegafy.ViewModel
             return this.sourceBitmap != null;
         }
 
+        #endregion
+
+        #region Events
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -221,5 +247,7 @@ namespace GroupDStegafy.ViewModel
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
     }
 }
