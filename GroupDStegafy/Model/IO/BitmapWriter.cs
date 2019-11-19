@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
@@ -13,9 +11,11 @@ namespace GroupDStegafy.Model.IO
     /// </summary>
     public static class BitmapWriter
     {
+
         /// <summary>
         ///     Saves the writable bitmap image that is passed in.
-        ///     Precondition: 
+        ///     Precondition: none
+        ///     Post-condition: none
         /// </summary>
         /// <param name="bitmap">The modified image.</param>
         public static async void SaveWritableBitmap(StorageFile savefile, Bitmap bitmap)

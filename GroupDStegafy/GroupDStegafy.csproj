@@ -120,6 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Extensions\BitmapExtensions.cs" />
+    <Compile Include="Model\Image\Image.cs" />
     <Compile Include="Model\Image\MonochromeBitmap.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />

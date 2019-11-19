@@ -5,6 +5,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Xaml.Controls;
 using GroupDStegafy.ViewModel;
+using Windows.UI.Xaml;
 
 namespace GroupDStegafy.View
 {
@@ -18,7 +19,7 @@ namespace GroupDStegafy.View
             this.InitializeComponent();
         }
 
-        private async void loadSourceButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void loadSourceButton_Click(object sender, RoutedEventArgs e)
         {
             var openPicker = new FileOpenPicker
             {
@@ -33,7 +34,7 @@ namespace GroupDStegafy.View
             ((MainPageViewModel)DataContext).HandleLoadSource(file);
         }
 
-        private async void loadSecretButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void loadSecretButton_Click(object sender, RoutedEventArgs e)
         {
             var openPicker = new FileOpenPicker
             {
@@ -47,13 +48,13 @@ namespace GroupDStegafy.View
             ((MainPageViewModel)DataContext).HandleLoadSecret(file);
         }
 
-        private async void saveSourceButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void saveSourceButton_Click(object sender, RoutedEventArgs e)
         {
             var file = await this.promptSaveImage();
             ((MainPageViewModel) DataContext).HandleSaveSource(file);
         }
 
-        private async void saveSecretButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void saveSecretButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO handle saving text
             var file = await this.promptSaveImage();

@@ -1,34 +1,84 @@
-﻿using Windows.UI;
+﻿using System;
+using Windows.UI;
 
 namespace GroupDStegafy.Model.Image
 {
-    public class MonochromeBitmap
+    /// <summary>
+    ///     Responsible for the implementation of a Monochrome bitmap image.
+    /// </summary>
+    public class MonochromeBitmap : Image
     {
-        public bool[] Pixels { get; }
-        public uint Width { get; }
-        private uint Height => (uint)(this.Pixels.Length / this.Width);
 
+        #region Properties 
+
+        /// <summary>
+        /// Gets the pixels.
+        /// </summary>
+        /// <value>
+        /// The pixels.
+        /// </value>
+        public bool[] Pixels { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MonochromeBitmap"/> class.
+        ///     Precondition: source != null
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="source">The source.</param>
         public MonochromeBitmap(Bitmap source)
         {
+            if (source == null)
+            {
+                throw new ArgumentNullException();
+            }
+
             this.Width = source.Width;
             this.Pixels = new bool[source.Width * source.Height];
-            for (var i = 0; i < this.Pixels.Length; i++)
-            {
-                var lsb = (source.GetPixelBgra8((int) (i % this.Width), (int) (i / this.Width)).B & 1) == 1;
-                this.Pixels[i] = lsb;
-            }
+
+            this.changePixelsToMonochrome(source);
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        ///     Converts the monochrome image to the standard Bitmap image.
+        ///     Precondition: none
+        ///     Post-condition: none
+        /// </summary>
+        /// <returns>The original bitmap image.</returns>
         public Bitmap ToBitmap()
         {
             var bytes = new byte[this.Pixels.Length * 4];
             var bitmap = new Bitmap(bytes, this.Width, 1, 1);
             for (var i = 0; i < this.Pixels.Length; i++)
             {
-                bitmap.SetPixelBgra8((int) (i % this.Width), (int)(i / this.Width), this.Pixels[i] ? Colors.White : Colors.Black);
+                var negatedColor = this.Pixels[i] ? Colors.White : Colors.Black;
+                bitmap.SetPixelBgra8((int) (i % this.Width), (int)(i / this.Width), negatedColor);
             }
 
             return bitmap;
         }
+
+        #endregion
+
+        #region Private Helpers
+
+        private void changePixelsToMonochrome(Bitmap source)
+        {
+            for (var i = 0; i < this.Pixels.Length; i++)
+            {
+                var pixelBlueByteValue = (source.GetPixelBgra8((int)(i % this.Width), (int)(i / this.Width)).B & 1);
+                var isPixelWhite = pixelBlueByteValue == 1;
+                this.Pixels[i] = isPixelWhite;
+            }
+        }
+
+        #endregion
     }
 }
