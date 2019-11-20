@@ -51,11 +51,11 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentOutOfRangeException(nameof(y), "Y must be within image bounds");
             }
         }
-
+        
         /// <summary>
         ///     Gets the color of the pixel at the specified coordinates.
         ///     Precondition: X and Y are within image bounds
-        ///     Postcondition: None
+        ///     Post-condition: None
         /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
