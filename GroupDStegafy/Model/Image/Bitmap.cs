@@ -56,6 +56,7 @@ namespace GroupDStegafy.Model.Image
             this.Height = (uint)this.pixelBytes.Length / (4 * this.Width);
             this.DpiX = dpix;
             this.DpiY = dpiy;
+            this.createHeaderPixels();
         }
 
         #endregion
@@ -145,6 +146,14 @@ namespace GroupDStegafy.Model.Image
         #endregion
 
         #region Private Helpers
+
+        private void createHeaderPixels()
+        {
+            var pixelOne = this.GetPixelColor(0, 0);
+            var pixelTwo = this.GetPixelColor(1, 0);
+
+            this.HeaderPixels = new HeaderPixels(pixelOne, pixelTwo);
+        }
 
         private static byte changeLeastSignificantBit(byte input, bool isWhite)
         {

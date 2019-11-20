@@ -121,6 +121,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Extensions\BitmapExtensions.cs" />
+    <Compile Include="Model\Extensions\ByteExtension.cs" />
     <Compile Include="Model\Image\HeaderPixels.cs" />
     <Compile Include="Model\Image\Image.cs" />
     <Compile Include="Model\Image\MonochromeBitmap.cs" />
@@ -165,7 +166,9 @@
       <Version>6.2.8</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utility\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -14,7 +14,7 @@ namespace GroupDStegafy.Model.Extensions
         /// <summary>
         ///     Converts a storage file with a bitmap to a BitmapImage asynchronously.
         ///     Precondition: None
-        ///     Postcondition None
+        ///     Post-condition None
         /// </summary>
         /// <param name="imageFile">The image file.</param>
         /// <returns>The image contained in the file.</returns>

@@ -28,6 +28,14 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public uint Height { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the header pixels.
+        /// </summary>
+        /// <value>
+        /// The header pixels.
+        /// </value>
+        public HeaderPixels HeaderPixels { get; protected set; }
+
         #endregion
 
         /// <summary>

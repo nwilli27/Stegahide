@@ -1,12 +1,13 @@
 ﻿using System;
 using Windows.UI;
+using GroupDStegafy.Model.Extensions;
 
 namespace GroupDStegafy.Model.Image
 {
     /// <summary>
     ///     Class responsible for the implementation for the header pixels.
     /// </summary>
-    internal class HeaderPixels
+    public class HeaderPixels
     {
 
         #region Data Members
@@ -41,7 +42,7 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public bool HasEncryption
         {
-            get => (this.secondPixelColor.R & LeastSignificantBit) == 1;
+            get => this.secondPixelColor.R.GetLeastSignificantBit() == 1;
             set => this.setSecondPixelEncryptionStatus(value);
         }
 
@@ -53,20 +54,19 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public int BitsPerColorChannel
         {
-            get => (this.secondPixelColor.G >> 1);
-            //TODO not actually sure if this will work. As the lsb of green will be used to indicate the secret image.
-            set => this.secondPixelColor.G = Convert.ToByte(value);
+            get => this.secondPixelColor.G.GetNumberOfSetBits();
+            set => this.secondPixelColor.G.SetNumberOfOneBits(value);
         }
 
         /// <summary>
         /// Gets a value indicating whether this instance is secret image.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is secret image; otherwise, <c>false</c>.
+        ///   <c>true</c> if this instance is secret image; otherwise, <c>has secret text</c>.
         /// </value>
         public bool HasSecretImage
         {
-            get => (this.secondPixelColor.G & LeastSignificantBit) == 0;
+            get => this.secondPixelColor.B.GetLeastSignificantBit() == 0;
             set => this.setSecondPixelImageStatus(value);
         } 
 
@@ -75,33 +75,32 @@ namespace GroupDStegafy.Model.Image
         #region Constants
 
         private const int EncryptionColorCode = 212;
-        //TODO make color extension to get least significant bit of color channels if possible.
-        private const uint LeastSignificantBit = 0x0000FFFF;
-
+        
         #endregion
 
         #region Constructors
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="HeaderPixels"/> class.
-        ///     Precondition: none
-        ///     Post-condition: this.firstPixelColor = source.FirstPixel
-        ///                     this.secondPixelColor = source.SecondPixel
+        ///     Precondition: source != null
+        ///     Post-condition: this.firstPixelColor = pixelOne
+        ///                     this.secondPixelColor = pixelTwo
         /// </summary>
-        /// <param name="source">The source.</param>
-        public HeaderPixels(Image source)
+        /// <param name="pixelOne">The pixel one.</param>
+        /// <param name="pixelTwo">The pixel two.</param>
+        public HeaderPixels(Color pixelOne, Color pixelTwo)
         {
-            this.firstPixelColor = source.GetPixelColor(0, 0);
-            this.secondPixelColor = source.GetPixelColor(1, 0);
+            this.firstPixelColor = pixelOne;
+            this.secondPixelColor = pixelTwo;
         }
 
         #endregion
 
         #region Private Helpers
 
-        private void setFirstPixelToSecretMessageColorCode(bool value)
+        private void setFirstPixelToSecretMessageColorCode(bool canSetFirstPixel)
         {
-            if (value)
+            if (canSetFirstPixel)
             {
                 this.firstPixelColor.R = EncryptionColorCode;
                 this.firstPixelColor.G = EncryptionColorCode;
@@ -109,27 +108,27 @@ namespace GroupDStegafy.Model.Image
             }
         }
 
-        private void setSecondPixelEncryptionStatus(bool value)
+        private void setSecondPixelEncryptionStatus(bool canSetEncryptionStatus)
         {
-            if (value)
+            if (canSetEncryptionStatus)
             {
-                this.secondPixelColor.R |= 1;
+                this.secondPixelColor.R.ChangeLastBit(true);
             }
             else
             {
-                this.secondPixelColor.R &= 0xfe;
+                this.secondPixelColor.R.ChangeLastBit(false);
             }
         }
 
-        private void setSecondPixelImageStatus(bool value)
+        private void setSecondPixelImageStatus(bool canSetImageStatus)
         {
-            if (value)
+            if (canSetImageStatus)
             {
-                this.secondPixelColor.G |= 1;
+                this.secondPixelColor.B.ChangeLastBit(true);
             }
             else
             {
-                this.secondPixelColor.G &= 0xfe;
+                this.secondPixelColor.B.ChangeLastBit(false);
             }
         }
 
