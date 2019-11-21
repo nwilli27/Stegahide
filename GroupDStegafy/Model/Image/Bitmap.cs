@@ -132,6 +132,8 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
+            this.setUpHeaderForSecretImage();
+            
             for (var x = 0; x < bitmap.Width; x++)
             {
                 for (var y = 0; y < bitmap.Height; y++)
@@ -146,6 +148,17 @@ namespace GroupDStegafy.Model.Image
         #endregion
 
         #region Private Helpers
+
+        private void setUpHeaderForSecretImage()
+        {
+            this.HeaderPixels.HasSecretMessage = true;
+            this.HeaderPixels.BitsPerColorChannel = 1;
+            this.HeaderPixels.HasEncryption = false;
+            this.HeaderPixels.IsSecretText = false;
+
+            this.SetPixelColor(0, 0, this.HeaderPixels.FirstPixelColor);
+            this.SetPixelColor(1, 0, this.HeaderPixels.SecondPixelColor);
+        }
 
         private void createHeaderPixels()
         {

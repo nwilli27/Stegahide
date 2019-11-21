@@ -13,10 +13,26 @@ namespace GroupDStegafy.Model.Image
 
         private Color firstPixelColor;
         private Color secondPixelColor;
-        
+
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the color of the first pixel.
+        /// </summary>
+        /// <value>
+        /// The color of the first pixel.
+        /// </value>
+        public Color FirstPixelColor => this.firstPixelColor;
+
+        /// <summary>
+        /// Gets the color of the second pixel.
+        /// </summary>
+        /// <value>
+        /// The color of the second pixel.
+        /// </value>
+        public Color SecondPixelColor => this.secondPixelColor;
 
         /// <summary>
         /// Gets a value indicating whether the image has a secret message.
@@ -54,16 +70,16 @@ namespace GroupDStegafy.Model.Image
         public int BitsPerColorChannel
         {
             get => this.secondPixelColor.G.GetNumberOfOneBits();
-            set => this.secondPixelColor.G.SetNumberOfOneBits(value);
+            set => this.secondPixelColor.G = this.secondPixelColor.G.SetNumberOfOneBits(value);
         }
 
         /// <summary>
         /// Gets a value indicating whether this instance is secret text
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is secret text; otherwise, <c>has secret image</c>.
+        ///   <c>true</c> if this instance is secret text; otherwise, <c>is secret image</c>.
         /// </value>
-        public bool HasSecretText
+        public bool IsSecretText
         {
             get => this.secondPixelColor.B.IsLeastSignificantBitOne();
             set => this.setSecondPixelImageStatus(value);
@@ -83,7 +99,7 @@ namespace GroupDStegafy.Model.Image
         ///     Initializes a new instance of the <see cref="HeaderPixels"/> class.
         ///     Precondition: source != null
         ///     Post-condition: this.firstPixelColor = pixelOne
-        ///                     this.secondPixelColor = pixelTwo
+        ///                     this.SecondPixelColor = pixelTwo
         /// </summary>
         /// <param name="pixelOne">The pixel one.</param>
         /// <param name="pixelTwo">The pixel two.</param>
@@ -111,11 +127,11 @@ namespace GroupDStegafy.Model.Image
         {
             if (canSetEncryptionStatus)
             {
-                this.secondPixelColor.R.SetLeastSignificantBit(true);
+                this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(true);
             }
             else
             {
-                this.secondPixelColor.R.SetLeastSignificantBit(false);
+                this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(false);
             }
         }
 
@@ -123,11 +139,11 @@ namespace GroupDStegafy.Model.Image
         {
             if (canSetImageStatus)
             {
-                this.secondPixelColor.B.SetLeastSignificantBit(true);
+                this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(true);
             }
             else
             {
-                this.secondPixelColor.B.SetLeastSignificantBit(false);
+                this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(false);
             }
         }
 
