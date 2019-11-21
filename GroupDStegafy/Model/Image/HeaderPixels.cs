@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.UI;
+﻿using Windows.UI;
 using GroupDStegafy.Model.Extensions;
 
 namespace GroupDStegafy.Model.Image
@@ -42,7 +41,7 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public bool HasEncryption
         {
-            get => this.secondPixelColor.R.GetLeastSignificantBit() == 1;
+            get => this.secondPixelColor.R.IsLeastSignificantBitOne();
             set => this.setSecondPixelEncryptionStatus(value);
         }
 
@@ -54,19 +53,19 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public int BitsPerColorChannel
         {
-            get => this.secondPixelColor.G.GetNumberOfSetBits();
+            get => this.secondPixelColor.G.GetNumberOfOneBits();
             set => this.secondPixelColor.G.SetNumberOfOneBits(value);
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is secret image.
+        /// Gets a value indicating whether this instance is secret text
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this instance is secret image; otherwise, <c>has secret text</c>.
+        ///   <c>true</c> if this instance is secret text; otherwise, <c>has secret image</c>.
         /// </value>
-        public bool HasSecretImage
+        public bool HasSecretText
         {
-            get => this.secondPixelColor.B.GetLeastSignificantBit() == 0;
+            get => this.secondPixelColor.B.IsLeastSignificantBitOne();
             set => this.setSecondPixelImageStatus(value);
         } 
 
@@ -112,11 +111,11 @@ namespace GroupDStegafy.Model.Image
         {
             if (canSetEncryptionStatus)
             {
-                this.secondPixelColor.R.ChangeLastBit(true);
+                this.secondPixelColor.R.SetLeastSignificantBit(true);
             }
             else
             {
-                this.secondPixelColor.R.ChangeLastBit(false);
+                this.secondPixelColor.R.SetLeastSignificantBit(false);
             }
         }
 
@@ -124,11 +123,11 @@ namespace GroupDStegafy.Model.Image
         {
             if (canSetImageStatus)
             {
-                this.secondPixelColor.B.ChangeLastBit(true);
+                this.secondPixelColor.B.SetLeastSignificantBit(true);
             }
             else
             {
-                this.secondPixelColor.B.ChangeLastBit(false);
+                this.secondPixelColor.B.SetLeastSignificantBit(false);
             }
         }
 

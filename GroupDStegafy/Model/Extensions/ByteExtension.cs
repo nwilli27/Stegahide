@@ -8,60 +8,49 @@ namespace GroupDStegafy.Model.Extensions
     internal static class ByteExtension
     {
 
-        #region Constants
-
-        private const uint LeastSignificantBit = 0x0000FFFF;
-
-        #endregion
-
         #region Methods
 
         /// <summary>
-        ///     Gets the least significant bit.
-        ///     Precondition: none
-        ///     Post-condition: none
+        ///     Determines whether [is last bit set] [the specified byte input].
         /// </summary>
         /// <param name="byteInput">The byte input.</param>
-        /// <returns></returns>
-        public static uint GetLeastSignificantBit(this byte byteInput)
+        /// <returns>
+        ///   <c>true</c> if [is last bit set] [the specified byte input]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsLeastSignificantBitOne(this byte byteInput)
         {
-            return (byteInput & LeastSignificantBit);
+            return (0 != (byteInput & 0x01));
         }
 
         /// <summary>
-        ///     Shifts the bit right one.
-        ///     Precondition: none
-        ///     Post-condition: none
+        /// Gets the number of bits of a byte value.
+        /// Ex: 30 = 5 bits
+        ///    255 = 8 bits
         /// </summary>
-        /// <param name="byteInput">The byte input.</param>
+        /// <param name="bits">The bits.</param>
         /// <returns></returns>
-        public static int ShiftByteRightOne(this byte byteInput)
+        public static int Size(this byte bits)
         {
-            return (byteInput >> 1);
+            return (int)(Math.Log(bits, 2)) + 1;
         }
 
         /// <summary>
-        ///     Shifts the bit left one.
-        ///     Precondition: none
-        ///     Post-condition: none
-        /// </summary>
-        /// <param name="byteInput">The byte input.</param>
-        /// <returns></returns>
-        public static int ShiftByteLeftOne(this byte byteInput)
-        {
-            return (byteInput << 1);
-        }
-
-        /// <summary>
-        ///     Changes the last bit.
+        ///     Returns the last bit.
         ///     Precondition: none
         ///     Post-condition: none
         /// </summary>
         /// <param name="byteInput">The byte input.</param>
         /// <param name="lastBitValue">if set to <c>true</c> [last bit value].</param>
-        public static byte ChangeLastBit(this byte byteInput, bool lastBitValue)
+        public static byte SetLeastSignificantBit(this byte byteInput, bool lastBitValue)
         {
-            return byteInput |= 1;
+            if (lastBitValue)
+            {
+                return (byte) (byteInput | 1);
+            }
+            else
+            {
+                return (byte) (byteInput & 0xfe);
+            }
         }
 
         /// <summary>
@@ -70,8 +59,10 @@ namespace GroupDStegafy.Model.Extensions
         ///     Post-condition: none
         /// </summary>
         /// <param name="byteInput">The byte input.</param>
-        /// <returns></returns>
-        public static int GetNumberOfSetBits(this byte byteInput)
+        /// <returns>
+        /// The number of set bits.
+        /// </returns>
+        public static int GetNumberOfOneBits(this byte byteInput)
         {
             var count = 0;
 
@@ -91,7 +82,10 @@ namespace GroupDStegafy.Model.Extensions
         /// </summary>
         /// <param name="byteInput">The byte input.</param>
         /// <param name="numberOfBits">The number of bits.</param>
-        public static void SetNumberOfOneBits(this byte byteInput, int numberOfBits)
+        /// <returns>
+        ///     Sets The number of set bits and returns a byte.
+        /// </returns>
+        public static byte SetNumberOfOneBits(this byte byteInput, int numberOfBits)
         {
             var newByteValue = 0.0;
 
@@ -100,7 +94,7 @@ namespace GroupDStegafy.Model.Extensions
                 newByteValue += Math.Pow(2, i);
             }
 
-            byteInput = Convert.ToByte(newByteValue);
+            return Convert.ToByte(newByteValue);
         }
 
         #endregion

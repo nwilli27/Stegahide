@@ -3,6 +3,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
+using GroupDStegafy.Model.Extensions;
 
 namespace GroupDStegafy.Model.Image
 {
@@ -82,7 +83,7 @@ namespace GroupDStegafy.Model.Image
         /// <summary>
         ///     Gets the color of the pixel at the specified coordinates.
         ///     Precondition: X and Y are within image bounds
-        ///     Postcondition: None
+        ///     Post-condition: None
         /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>
@@ -136,8 +137,7 @@ namespace GroupDStegafy.Model.Image
                 for (var y = 0; y < bitmap.Height; y++)
                 {
                     var pixelColor = this.GetPixelColor(x, y);
-                    //TODO could maybe make this an extension for a Color object.
-                    pixelColor.B = changeLeastSignificantBit(pixelColor.B, bitmap.GetPixelColor(x, y).Equals(Colors.White));
+                    pixelColor.B = pixelColor.B.SetLeastSignificantBit(bitmap.GetPixelColor(x, y).Equals(Colors.White));
                     this.SetPixelColor(x, y, pixelColor);
                 }
             }
@@ -153,14 +153,6 @@ namespace GroupDStegafy.Model.Image
             var pixelTwo = this.GetPixelColor(1, 0);
 
             this.HeaderPixels = new HeaderPixels(pixelOne, pixelTwo);
-        }
-
-        private static byte changeLeastSignificantBit(byte input, bool isWhite)
-        {
-            var changeLastBitTo0 = (byte) (input & 0xFE);
-            var changeLastBitTo1 = (byte) (input | 1);
-
-            return isWhite ? changeLastBitTo1 : changeLastBitTo0;
         }
 
         #endregion
