@@ -28,7 +28,9 @@ namespace GroupDStegafy.Model.Extensions
         ///    255 = 8 bits
         /// </summary>
         /// <param name="bits">The bits.</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     The number of bits in a byte value.
+        /// </returns>
         public static int Size(this byte bits)
         {
             return (int)(Math.Log(bits, 2)) + 1;
@@ -60,7 +62,7 @@ namespace GroupDStegafy.Model.Extensions
         /// </summary>
         /// <param name="byteInput">The byte input.</param>
         /// <returns>
-        /// The number of set bits.
+        ///     The number of set bits.
         /// </returns>
         public static int GetNumberOfOneBits(this byte byteInput)
         {
