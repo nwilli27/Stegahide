@@ -37,6 +37,22 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public uint DpiY { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has secret message.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance has secret message; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasSecretMessage => this.HeaderPixels.HasSecretMessage;
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is secret text.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is secret text; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSecretText => this.HeaderPixels.IsSecretText;
+
         #endregion
 
         #region Constructors
@@ -132,8 +148,6 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
-            this.setUpHeaderForSecretImage();
-            
             for (var x = 0; x < bitmap.Width; x++)
             {
                 for (var y = 0; y < bitmap.Height; y++)
@@ -143,11 +157,41 @@ namespace GroupDStegafy.Model.Image
                     this.SetPixelColor(x, y, pixelColor);
                 }
             }
+
+            this.setUpHeaderForSecretImage();
+        }
+
+        /// <summary>
+        ///     Embeds the text message in the bitmap pixels color bytes.
+        ///     Precondition: message != null
+        ///     Post-condition: message embedded in bitmap pixel color bytes
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <exception cref="ArgumentNullException">message</exception>
+        public void EmbedTextMessage(string message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            this.setUpHeaderForSecretTextMessage();
         }
 
         #endregion
 
         #region Private Helpers
+
+        private void setUpHeaderForSecretTextMessage()
+        {
+            this.HeaderPixels.HasSecretMessage = true;
+            //TODO this is specified by user in view. Change later
+            this.HeaderPixels.BitsPerColorChannel = 1;
+            this.HeaderPixels.HasEncryption = false;
+            this.HeaderPixels.IsSecretText = true;
+
+            this.setHeaderPixels();
+        }
 
         private void setUpHeaderForSecretImage()
         {
@@ -156,6 +200,11 @@ namespace GroupDStegafy.Model.Image
             this.HeaderPixels.HasEncryption = false;
             this.HeaderPixels.IsSecretText = false;
 
+            this.setHeaderPixels();
+        }
+
+        private void setHeaderPixels()
+        {
             this.SetPixelColor(0, 0, this.HeaderPixels.FirstPixelColor);
             this.SetPixelColor(1, 0, this.HeaderPixels.SecondPixelColor);
         }

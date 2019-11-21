@@ -20,9 +20,10 @@ namespace GroupDStegafy.ViewModel
         private Bitmap sourceBitmap;
         private MonochromeBitmap secretBitmap;
         private readonly string secretText;
+
         private bool canSaveSource;
         private bool canSaveSecret;
-
+        
         #endregion
 
         #region Properties
@@ -119,6 +120,7 @@ namespace GroupDStegafy.ViewModel
         ///     The encode command.
         /// </value>
         public RelayCommand EncodeCommand { get; }
+
         /// <summary>
         ///     Gets the decode command.
         /// </summary>
@@ -147,7 +149,7 @@ namespace GroupDStegafy.ViewModel
         /// <summary>
         ///     Handles loading the source image file.
         ///     Precondition: None
-        ///     Postcondition: The source image file is loaded, this.CanSaveSource = false
+        ///     Post-condition: The source image file is loaded, this.CanSaveSource = false
         /// </summary>
         /// <param name="file">The file.</param>
         public async void HandleLoadSource(StorageFile file)
@@ -162,7 +164,7 @@ namespace GroupDStegafy.ViewModel
         /// <summary>
         ///     Handles loading the secret.
         ///     Precondition: None
-        ///     Postcondition: The secret is loaded, this.CanSaveSecret = false
+        ///     Post-condition: The secret is loaded, this.CanSaveSecret = false
         /// </summary>
         /// <param name="file">The file.</param>
         public async void HandleLoadSecret(StorageFile file)
@@ -179,7 +181,7 @@ namespace GroupDStegafy.ViewModel
         /// <summary>
         ///     Handles saving the source image, now with an embedded secret, to a file.
         ///     Precondition: None
-        ///     Postcondition: The source image is saved to disk.
+        ///     Post-condition: The source image is saved to disk.
         /// </summary>
         /// <param name="file">The file.</param>
         public void HandleSaveSource(StorageFile file)
@@ -193,7 +195,7 @@ namespace GroupDStegafy.ViewModel
         /// <summary>
         ///     Handles saving the extracted secret to a file.
         ///     Precondition: None
-        ///     Postcondition: The secret is saved to disk.
+        ///     Post-condition: The secret is saved to disk.
         /// </summary>
         /// <param name="file">The file.</param>
         public void HandleSaveSecret(StorageFile file)
@@ -212,24 +214,36 @@ namespace GroupDStegafy.ViewModel
         private void encodeMessage(object obj)
         {
             this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
-            this.OnPropertyChanged(nameof(this.SourceBitmap));
-            this.CanSaveSource = true;
-        }
 
-        private bool canEncodeMessage(object obj)
-        {
-            return this.sourceBitmap != null && (this.secretBitmap != null || this.secretText != null);
+            this.OnPropertyChanged(nameof(this.SourceBitmap));
+            this.EncodeCommand.OnCanExecuteChanged();
+            this.DecodeCommand.OnCanExecuteChanged();
+            this.CanSaveSource = true;
         }
 
         private void decodeMessage(object obj)
         {
-            this.SecretBitmap = MonochromeBitmap.FromEmbeddedSecret(this.SourceBitmap);
+            if (this.SourceBitmap.IsSecretText)
+            {
+                //TODO decode text here
+            }
+            else
+            {
+                this.SecretBitmap = MonochromeBitmap.FromEmbeddedSecret(this.SourceBitmap);
+            }
+            
             this.CanSaveSecret = true;
         }
 
         private bool canDecodeMessage(object obj)
         {
-            return this.sourceBitmap != null;
+            return this.sourceBitmap != null &&
+                   this.sourceBitmap.HasSecretMessage;
+        }
+
+        private bool canEncodeMessage(object obj)
+        {
+            return this.sourceBitmap != null && (this.secretBitmap != null || this.secretText != null);
         }
 
         #endregion

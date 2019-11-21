@@ -30,7 +30,7 @@ namespace GroupDStegafy.Model.Image
         /// <summary>
         ///     Creates a monochrome image from a bitmap, where all non-black pixels are white, and returns it.
         ///     Precondition: source is not null
-        ///     Postcondition: None
+        ///     Post-condition: None
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns>A monochrome image.</returns>
@@ -41,6 +41,7 @@ namespace GroupDStegafy.Model.Image
             {
                 throw new ArgumentNullException(nameof(source));
             }
+
             var pixels = new bool[source.Width * source.Height];
             for (var x = 0; x < source.Width; x++)
             {
@@ -53,12 +54,19 @@ namespace GroupDStegafy.Model.Image
             return new MonochromeBitmap(pixels, source.Width, source.Height);
         }
 
+        /// <summary>
+        /// Extracts the embedded monochrome image from the source image.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <returns>The embedded monochrome image from the source image</returns>
+        /// <exception cref="ArgumentNullException">source</exception>
         public static MonochromeBitmap FromEmbeddedSecret(Bitmap source)
         {
             if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
+
             var pixels = new bool[source.Width * source.Height];
             for (var x = 0; x < source.Width; x++)
             {
@@ -95,7 +103,7 @@ namespace GroupDStegafy.Model.Image
         /// <summary>
         ///     Gets the color of the pixel at the specified coordinates.
         ///     Precondition: X and Y are within image bounds
-        ///     Postcondition: None
+        ///     Post-condition: None
         /// </summary>
         /// <param name="x">The x.</param>
         /// <param name="y">The y.</param>

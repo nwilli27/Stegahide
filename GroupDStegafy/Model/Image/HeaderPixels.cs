@@ -82,7 +82,7 @@ namespace GroupDStegafy.Model.Image
         public bool IsSecretText
         {
             get => this.secondPixelColor.B.IsLeastSignificantBitOne();
-            set => this.setSecondPixelImageStatus(value);
+            set => this.setSecondPixelIsSecretTextStatus(value);
         } 
 
         #endregion
@@ -125,26 +125,16 @@ namespace GroupDStegafy.Model.Image
 
         private void setSecondPixelEncryptionStatus(bool canSetEncryptionStatus)
         {
-            if (canSetEncryptionStatus)
-            {
-                this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(true);
-            }
-            else
-            {
-                this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(false);
-            }
+            this.secondPixelColor.R = canSetEncryptionStatus ?
+                                      this.secondPixelColor.R.SetLeastSignificantBit(true) :
+                                      this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(false);
         }
 
-        private void setSecondPixelImageStatus(bool canSetImageStatus)
+        private void setSecondPixelIsSecretTextStatus(bool canSetIsSecretTextStatus)
         {
-            if (canSetImageStatus)
-            {
-                this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(true);
-            }
-            else
-            {
-                this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(false);
-            }
+            this.secondPixelColor.B = canSetIsSecretTextStatus ?
+                                      this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(true) :
+                                      this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(false);
         }
 
         #endregion
