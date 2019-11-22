@@ -19,7 +19,7 @@ namespace GroupDStegafy.Model.Extensions
         /// </summary>
         /// <param name="binaryString">The binaryString.</param>
         /// <returns>A string composed of ASCII characters converted from a byte.</returns>
-        public static string GetBytesFromBinaryString(this string binaryString)
+        public static string ConvertBinaryToString(this string binaryString)
         {
             var charList = new List<byte>();
 
@@ -34,22 +34,49 @@ namespace GroupDStegafy.Model.Extensions
         }
 
         /// <summary>
-        ///     Converts a string into a list of items indicating 8 bits for each character in the string.
+        ///     Converts a string into a string of items indicating 8 bits for each character in the string.
         ///     Precondition: none
         ///     Post-condition: none
         /// </summary>
         /// <param name="stringInput">The string input.</param>
-        /// <returns>A list of all characters turned into a byte of 8 bits.</returns>
-        public static List<string> ConvertToBinaryList(this string stringInput)
+        /// <returns>A string of all characters turned into a byte of 8 bits.</returns>
+        public static string ConvertToBinary(this string stringInput)
         {
-            var binaryList = new List<string>();
+            var binaryOutput = "";
 
             foreach (var currentChar in stringInput.Select(c => Convert.ToString(c, 2).PadLeft(8, '0')))
             {
-                binaryList.Add(currentChar);
+                binaryOutput += currentChar;
             }
 
-            return binaryList;
+            return binaryOutput;
+        }
+
+        /// <summary>
+        ///     Splits the string in parts based on the [partLength]. Returns the split string
+        ///     as a stack.
+        ///     Precondition: partLength > 0
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="stringInput">The string input.</param>
+        /// <param name="partLength">Length of the part.</param>
+        /// <returns>A stack of the split string</returns>
+        /// <exception cref="ArgumentException">Part length has to be positive. - partLength</exception>
+        public static Stack<string> SplitInParts(this string stringInput, int partLength)
+        {
+            if (partLength <= 0)
+            {
+                throw new ArgumentException("Part length has to be positive.", nameof(partLength));
+            }
+
+            var splitStack = new Stack<string>();
+            
+            for (var i = 0; i < stringInput.Length; i += partLength)
+            {
+                splitStack.Push(stringInput.Substring(i, Math.Min(partLength, stringInput.Length - i)));
+            }
+
+            return splitStack;
         }
     }
 }
