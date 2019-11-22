@@ -175,6 +175,16 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(message));
             }
 
+            for (var x = 0; x < this.Width; x++)
+            {
+                for (var y = 0; y < this.Height; y++)
+                {
+                    var pixelColor = this.GetPixelColor(x, y);
+                    //TODO add BPCC to each color byte.
+                    this.SetPixelColor(x, y, pixelColor);
+                }
+            }
+
             this.setUpHeaderForSecretTextMessage();
         }
 

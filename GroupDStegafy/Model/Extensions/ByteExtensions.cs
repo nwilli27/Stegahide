@@ -5,7 +5,7 @@ namespace GroupDStegafy.Model.Extensions
     /// <summary>
     ///     Class offers additional functionality to the type byte
     /// </summary>
-    internal static class ByteExtension
+    internal static class ByteExtensions
     {
 
         #region Methods
