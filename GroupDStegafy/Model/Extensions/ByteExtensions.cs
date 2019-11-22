@@ -99,6 +99,21 @@ namespace GroupDStegafy.Model.Extensions
             return Convert.ToByte(newByteValue);
         }
 
+        /// <summary>
+        ///     Masks the byte with bit sequence that is applied on the end of the 8 bits.
+        ///     Precondition: bitSequence != null
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="byteInput">The byte input.</param>
+        /// <param name="bitSequence">The bit sequence.</param>
+        /// <returns>A new byte that is masked by the bit sequence appended on the end.</returns>
+        public static byte MaskByteWithBitSequence(this byte byteInput, string bitSequence)
+        {
+            var sequencePadded = bitSequence.PadLeft(8, '0');
+            var sequenceAsByte = Convert.ToByte(sequencePadded, 2);
+            return (byte) (byteInput | sequenceAsByte);
+        }
+
         #endregion
 
     }
