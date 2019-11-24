@@ -245,6 +245,7 @@ namespace GroupDStegafy.ViewModel
 
         private void encodeMessage(object obj)
         {
+            //TODO add option to embed message here
             this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
@@ -257,7 +258,8 @@ namespace GroupDStegafy.ViewModel
         {
             if (this.SourceBitmap.IsSecretText)
             {
-                //TODO decode text here
+                //TODO set text to output text block
+                var output = this.SourceBitmap.DecodeTextMessage();
             }
             else
             {

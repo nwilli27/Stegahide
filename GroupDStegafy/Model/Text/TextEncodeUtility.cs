@@ -10,7 +10,7 @@ namespace GroupDStegafy.Model.Text
     /// </summary>
     internal class TextEncodeUtility
     {
-
+        
         #region Methods 
 
         /// <summary>
