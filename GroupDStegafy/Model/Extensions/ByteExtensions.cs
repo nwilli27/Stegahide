@@ -7,6 +7,13 @@ namespace GroupDStegafy.Model.Extensions
     /// </summary>
     internal static class ByteExtensions
     {
+        #region Constants
+
+        private const int BaseForm = 2;
+        private const int ByteLength = 8;
+        private const char ZeroBit = '0';
+
+        #endregion
 
         #region Methods
 
@@ -20,20 +27,6 @@ namespace GroupDStegafy.Model.Extensions
         public static bool IsLeastSignificantBitOne(this byte byteInput)
         {
             return (0 != (byteInput & 0x01));
-        }
-
-        /// <summary>
-        /// Gets the number of bits of a byte value.
-        /// Ex: 30 = 5 bits
-        ///    255 = 8 bits
-        /// </summary>
-        /// <param name="bits">The bits.</param>
-        /// <returns>
-        ///     The number of bits in a byte value.
-        /// </returns>
-        public static int Size(this byte bits)
-        {
-            return (int)(Math.Log(bits, 2)) + 1;
         }
 
         /// <summary>
@@ -93,7 +86,7 @@ namespace GroupDStegafy.Model.Extensions
 
             for (var i = 0; i < numberOfBits; i++)
             {
-                newByteValue += Math.Pow(2, i);
+                newByteValue += Math.Pow(BaseForm, i);
             }
 
             return Convert.ToByte(newByteValue);
@@ -109,9 +102,22 @@ namespace GroupDStegafy.Model.Extensions
         /// <returns>A new byte that is masked by the bit sequence appended on the end.</returns>
         public static byte MaskByteWithBitSequence(this byte byteInput, string bitSequence)
         {
-            var sequencePadded = bitSequence.PadLeft(8, '0');
-            var sequenceAsByte = Convert.ToByte(sequencePadded, 2);
-            return (byte) (byteInput | sequenceAsByte);
+            var inputAsString = byteInput.ConvertToBaseFormTwo();
+            var sequenceAdded = inputAsString.ReplaceAt(inputAsString.Length - bitSequence.Length, bitSequence);
+
+            return Convert.ToByte(sequenceAdded, BaseForm);
+        }
+
+        /// <summary>
+        ///     Converts the byte to base 2 form with 8 bits.
+        ///     Precondition: none
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="byteInput">The byte input.</param>
+        /// <returns>A string (binary) in the base 2 form.</returns>
+        public static string ConvertToBaseFormTwo(this byte byteInput)
+        {
+            return Convert.ToString(byteInput, BaseForm).PadLeft(ByteLength, ZeroBit);
         }
 
         #endregion

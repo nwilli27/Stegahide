@@ -33,5 +33,7 @@
         <Button Name="saveSecretButton" Content="Save" IsEnabled="{Binding Path=CanSaveSecret}" Canvas.Left="1377" Canvas.Top="256" Width="{StaticResource ButtonWidth}" Click="saveSecretButton_Click"/>
         <Button Name="encodeButton" Content="Encode" Canvas.Left="713" Canvas.Top="331" Width="{StaticResource ButtonWidth}" Command="{Binding EncodeCommand}"/>
         <Button Name="decodeButton" Content="Decode" Canvas.Left="713" Canvas.Top="484" Width="{StaticResource ButtonWidth}" Command="{Binding DecodeCommand}"/>
+
+        <TextBox Name="textMessageBox" Text="{Binding Path=SecretText, Mode=TwoWay}" Height="200" Width="506" Canvas.Left="962" Canvas.Top="29"/>
     </Canvas>
 </Page>

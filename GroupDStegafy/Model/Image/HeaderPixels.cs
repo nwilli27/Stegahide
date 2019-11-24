@@ -127,14 +127,14 @@ namespace GroupDStegafy.Model.Image
         {
             this.secondPixelColor.R = canSetEncryptionStatus ?
                                       this.secondPixelColor.R.SetLeastSignificantBit(true) :
-                                      this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(false);
+                                      this.secondPixelColor.R.SetLeastSignificantBit(false);
         }
 
         private void setSecondPixelIsSecretTextStatus(bool canSetIsSecretTextStatus)
         {
             this.secondPixelColor.B = canSetIsSecretTextStatus ?
-                                      this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(true) :
-                                      this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(false);
+                                      this.secondPixelColor.B.SetLeastSignificantBit(true) :
+                                      this.secondPixelColor.B.SetLeastSignificantBit(false);
         }
 
         #endregion

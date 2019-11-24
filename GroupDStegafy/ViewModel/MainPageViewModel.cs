@@ -19,14 +19,30 @@ namespace GroupDStegafy.ViewModel
 
         private Bitmap sourceBitmap;
         private MonochromeBitmap secretBitmap;
-        private readonly string secretText;
+        private string secretText;
 
         private bool canSaveSource;
         private bool canSaveSecret;
-        
+
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the secret text.
+        /// </summary>
+        /// <value>
+        /// The secret text.
+        /// </value>
+        public string SecretText
+        {
+            get => this.secretText;
+            private set
+            {
+                this.secretText = value;
+                this.OnPropertyChanged(nameof(this.SecretText));
+            }
+        }
 
         /// <summary>
         ///     Gets the source bitmap.
@@ -213,7 +229,15 @@ namespace GroupDStegafy.ViewModel
 
         private void encodeMessage(object obj)
         {
-            this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
+            //TODO when text field is selected.
+            if (this.SecretText.Length != 0)
+            {
+                this.SourceBitmap.EmbedTextMessage(this.SecretText);
+            }
+            else
+            {
+                this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
+            }
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
             this.EncodeCommand.OnCanExecuteChanged();
@@ -225,7 +249,7 @@ namespace GroupDStegafy.ViewModel
         {
             if (this.SourceBitmap.IsSecretText)
             {
-                //TODO decode text here
+                this.SecretText = this.SourceBitmap.DecodeTextMessage();
             }
             else
             {

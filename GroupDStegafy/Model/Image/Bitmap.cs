@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Model.Extensions;
+using GroupDStegafy.Model.Text;
 
 namespace GroupDStegafy.Model.Image
 {
@@ -162,9 +163,9 @@ namespace GroupDStegafy.Model.Image
         }
 
         /// <summary>
-        ///     Embeds the text message in the bitmap pixels color bytes.
+        ///     Encodes the message in the bitmap.
         ///     Precondition: message != null
-        ///     Post-condition: message embedded in bitmap pixel color bytes
+        ///     Post-condition: message replaces bits in pixel color channels
         /// </summary>
         /// <param name="message">The message.</param>
         /// <exception cref="ArgumentNullException">message</exception>
@@ -175,39 +176,85 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(message));
             }
 
+            var messageWithStop = message + TextDecodeUtility.DecodingStopIndicator;
+            var binaryMessage = messageWithStop.ConvertToBinary();
+            var binaryBitsPerChannel = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
+
             for (var x = 0; x < this.Width; x++)
             {
                 for (var y = 0; y < this.Height; y++)
                 {
+                    if (binaryBitsPerChannel.Count == 0)
+                    {
+                        break;
+                    }
+
                     var pixelColor = this.GetPixelColor(x, y);
-                    //TODO add BPCC to each color byte.
+                    if (!areHeaderPixels(x, y))
+                    {
+                        pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryBitsPerChannel);
+                    }
                     this.SetPixelColor(x, y, pixelColor);
                 }
             }
 
-            this.setUpHeaderForSecretTextMessage();
+            this.SetUpHeaderForSecretTextMessage();
+        }
+
+        /// <summary>
+        ///     Decodes the text message from the bitmap.
+        ///     Precondition: none
+        ///     Post-condition: none
+        /// </summary>
+        /// <returns>The embedded text message from the color channel bytes.</returns>
+        public string DecodeTextMessage()
+        {
+            var binaryMessage = "";
+
+            for (var x = 0; x < this.Width; x++)
+            {
+                for (var y = 0; y < this.Height; y++)
+                {
+                    if (isFinishedDecoding(binaryMessage))
+                    {
+                        break;
+                    }
+
+                    var pixelColor = this.GetPixelColor(x, y);
+                    if (!areHeaderPixels(x, y))
+                    {
+                        binaryMessage += TextDecodeUtility.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
+                    }
+                }
+            }
+
+            return TextDecodeUtility.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
+        }
+
+        /// <summary>
+        ///     Sets up header for secret text message.
+        ///     Precondition: none
+        ///     Post-condition: HasSecretMessage = true
+        ///                     BitPerChannel = ?
+        ///                     HasEncryption = true
+        ///                     IsSecretText = true
+        /// </summary>
+        public void SetUpHeaderForSecretTextMessage()
+        {
+            this.HeaderPixels.HasSecretMessage = true;
+            this.HeaderPixels.IsSecretText = true;
+
+            this.setHeaderPixels();
         }
 
         #endregion
 
         #region Private Helpers
 
-        private void setUpHeaderForSecretTextMessage()
-        {
-            this.HeaderPixels.HasSecretMessage = true;
-            //TODO this is specified by user in view. Change later
-            this.HeaderPixels.BitsPerColorChannel = 1;
-            this.HeaderPixels.HasEncryption = false;
-            this.HeaderPixels.IsSecretText = true;
-
-            this.setHeaderPixels();
-        }
-
         private void setUpHeaderForSecretImage()
         {
             this.HeaderPixels.HasSecretMessage = true;
             this.HeaderPixels.BitsPerColorChannel = 1;
-            this.HeaderPixels.HasEncryption = false;
             this.HeaderPixels.IsSecretText = false;
 
             this.setHeaderPixels();
@@ -216,15 +263,29 @@ namespace GroupDStegafy.Model.Image
         private void setHeaderPixels()
         {
             this.SetPixelColor(0, 0, this.HeaderPixels.FirstPixelColor);
-            this.SetPixelColor(1, 0, this.HeaderPixels.SecondPixelColor);
+            this.SetPixelColor(0, 1, this.HeaderPixels.SecondPixelColor);
         }
 
         private void createHeaderPixels()
         {
             var pixelOne = this.GetPixelColor(0, 0);
-            var pixelTwo = this.GetPixelColor(1, 0);
+            var pixelTwo = this.GetPixelColor(0, 1);
 
             this.HeaderPixels = new HeaderPixels(pixelOne, pixelTwo);
+        }
+
+        private static bool areHeaderPixels(int x, int y)
+        {
+            return (x == 0 && y == 0) || (x == 0 && y == 1);
+        }
+
+        private static bool isFinishedDecoding(string binaryMessage)
+        {
+            //TODO maybe move decode indicator to bitmap class?
+
+            var message = binaryMessage.ConvertBinaryToString();
+            message = message.Substring(Math.Max(0, message.Length - TextDecodeUtility.DecodingStopIndicator.Length));
+            return message.Equals(TextDecodeUtility.DecodingStopIndicator);
         }
 
         #endregion
