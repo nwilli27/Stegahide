@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
@@ -225,8 +226,7 @@ namespace GroupDStegafy.ViewModel
             {
                 if (file.Name.EndsWith(".txt"))
                 {
-                    // TODO actually load the file
-                    this.SecretText = "To be fair, you have to have a very high IQ to understand Rick and Morty.";
+                    this.SecretText = await Windows.Storage.FileIO.ReadTextAsync(file);
                     this.SecretBitmap = null;
                 }
                 else
