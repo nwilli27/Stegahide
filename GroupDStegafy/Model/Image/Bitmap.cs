@@ -221,7 +221,7 @@ namespace GroupDStegafy.Model.Image
             {
                 for (var y = 0; y < this.Height; y++)
                 {
-                    if (isFinishedDecoding(binaryMessage))
+                    if (TextDecodeUtility.IsFinishedDecoding(binaryMessage))
                     {
                         break;
                     }
@@ -275,15 +275,6 @@ namespace GroupDStegafy.Model.Image
         private static bool areHeaderPixels(int x, int y)
         {
             return (x == 0 && y == 0) || (x == 0 && y == 1);
-        }
-
-        private static bool isFinishedDecoding(string binaryMessage)
-        {
-            //TODO maybe move decode indicator to bitmap class?
-
-            var message = binaryMessage.ConvertBinaryToString();
-            message = message.Substring(Math.Max(0, message.Length - TextDecodeUtility.DecodingStopIndicator.Length));
-            return message.Equals(TextDecodeUtility.DecodingStopIndicator);
         }
 
         #endregion

@@ -10,11 +10,6 @@ namespace GroupDStegafy.Model.Text
     /// </summary>
     internal class TextEncodeUtility
     {
-        #region Constants
-
-        private const string DecodingStopIndicator = "#.-.-.-# ";
-
-        #endregion
 
         #region Methods 
 

@@ -55,7 +55,23 @@ namespace GroupDStegafy.Model.Text
         /// <returns>A string with the decode indicator removed.</returns>
         public static string RemoveDecodeIndicator(string message)
         {
-            return message.ReplaceAt(message.Length - DecodingStopIndicator.Length, "");
+            return message.Replace(DecodingStopIndicator, "");
+        }
+
+        /// <summary>
+        ///     Determines whether [is finished decoding] [the specified binary message].
+        ///     Precondition: none
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="binaryMessage">The binary message.</param>
+        /// <returns>
+        ///   <c>true</c> if [is finished decoding] [the specified binary message]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsFinishedDecoding(string binaryMessage)
+        {
+            var message = binaryMessage.ConvertBinaryToString();
+            message = message.Substring(Math.Max(0, message.Length - DecodingStopIndicator.Length));
+            return message.Equals(DecodingStopIndicator);
         }
 
         #endregion
