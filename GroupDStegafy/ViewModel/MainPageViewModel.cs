@@ -24,8 +24,8 @@ namespace GroupDStegafy.ViewModel
 
         private bool canSaveSource;
         private bool canSaveSecret;
-        private Visibility imageEncryptionVisibility;
         private bool encryptImageSelected;
+        private bool showEncryptedSelected;
         
         #endregion
 
@@ -46,6 +46,7 @@ namespace GroupDStegafy.ViewModel
                 this.OnPropertyChanged(nameof(this.SourceBitmap));
                 this.OnPropertyChanged(nameof(this.SourceWriteableBitmap));
                 this.OnPropertyChanged(nameof(this.ImageEncryptionVisibility));
+                this.OnPropertyChanged(nameof(this.ShowEncryptedVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
                 this.DecodeCommand.OnCanExecuteChanged();
             }
@@ -130,6 +131,19 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        public Visibility ShowEncryptedVisibility => this.SourceBitmap != null && this.SourceBitmap.HasSecretMessage && this.SourceBitmap.HeaderPixels.HasEncryption
+                ? Visibility.Visible : Visibility.Collapsed;
+
+        public bool ShowEncryptedSelected
+        {
+            get => this.showEncryptedSelected;
+            set
+            {
+                this.showEncryptedSelected = value;
+                this.OnPropertyChanged(nameof(this.ShowEncryptedSelected));
+            }
+        }
+
         /// <summary>
         ///     Gets the encode command.
         /// </summary>
@@ -175,6 +189,7 @@ namespace GroupDStegafy.ViewModel
             {
                 this.SourceBitmap = await BitmapReader.ReadBitmap(file);
                 this.CanSaveSource = false;
+                
             }
         }
 
@@ -247,6 +262,10 @@ namespace GroupDStegafy.ViewModel
             else
             {
                 this.SecretBitmap = MonochromeBitmap.FromEmbeddedSecret(this.SourceBitmap);
+                if (this.SourceBitmap.HeaderPixels.HasEncryption && !this.ShowEncryptedSelected)
+                {
+                    this.SecretBitmap = this.SecretBitmap.GetFlipped();
+                }
             }
             
             this.CanSaveSecret = true;
