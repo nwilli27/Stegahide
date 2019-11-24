@@ -16,7 +16,7 @@ namespace GroupDStegafy.Model.Text
         private const int TotalByteBits = 8;
         private const char ZeroBit = '0';
 
-        public const string DecodingStopIndicator = "#.-.-.-# ";
+        public const string DecodingStopIndicator = "#.-.-.-#";
 
         #endregion
 
@@ -69,12 +69,9 @@ namespace GroupDStegafy.Model.Text
         /// </returns>
         public static bool IsFinishedDecoding(string binaryMessage)
         {
-            //TODO temporary fix to odd remaining bits. FIX later
-            var stop = "#.-.-.-#";
-
             var message = binaryMessage.ConvertBinaryToString().Trim();
-            message = message.Substring(Math.Max(0, message.Length - stop.Length));
-            return message.Equals(stop);
+            message = message.Substring(Math.Max(0, message.Length - DecodingStopIndicator.Length));
+            return message.Equals(DecodingStopIndicator);
         }
 
         #endregion
