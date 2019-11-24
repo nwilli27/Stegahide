@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
 using GroupDStegafy.FileIO;
@@ -23,6 +24,8 @@ namespace GroupDStegafy.ViewModel
 
         private bool canSaveSource;
         private bool canSaveSecret;
+        private Visibility imageEncryptionVisibility;
+        private bool encryptImageSelected;
         
         #endregion
 
@@ -42,6 +45,7 @@ namespace GroupDStegafy.ViewModel
                 this.sourceBitmap = value;
                 this.OnPropertyChanged(nameof(this.SourceBitmap));
                 this.OnPropertyChanged(nameof(this.SourceWriteableBitmap));
+                this.OnPropertyChanged(nameof(this.ImageEncryptionVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
                 this.DecodeCommand.OnCanExecuteChanged();
             }
@@ -61,6 +65,7 @@ namespace GroupDStegafy.ViewModel
                 this.secretBitmap = value;
                 this.OnPropertyChanged(nameof(this.SecretBitmap));
                 this.OnPropertyChanged(nameof(this.SecretWriteableBitmap));
+                this.OnPropertyChanged(nameof(this.ImageEncryptionVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
             }
         }
@@ -110,6 +115,18 @@ namespace GroupDStegafy.ViewModel
             {
                 this.canSaveSecret = value;
                 this.OnPropertyChanged(nameof(this.CanSaveSecret));
+            }
+        }
+
+        public Visibility ImageEncryptionVisibility => this.sourceBitmap != null && this.secretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
+
+        public bool EncryptImageSelected
+        {
+            get => this.encryptImageSelected;
+            set
+            {
+                this.encryptImageSelected = value;
+                this.OnPropertyChanged(nameof(this.EncryptImageSelected));
             }
         }
 
@@ -213,7 +230,7 @@ namespace GroupDStegafy.ViewModel
 
         private void encodeMessage(object obj)
         {
-            this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
+            this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
             this.EncodeCommand.OnCanExecuteChanged();

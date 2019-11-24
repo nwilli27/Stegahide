@@ -12,7 +12,6 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class Bitmap : Image
     {
-
         #region Data Members
 
         private readonly byte[] pixelBytes;
@@ -141,7 +140,8 @@ namespace GroupDStegafy.Model.Image
         ///     Post-condition: @each significant bit in the source image is replaced.
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
-        public void EmbedMonochromeImage(MonochromeBitmap bitmap)
+        /// <param name="encrypt">Whether or not to encrypt the image.</param>
+        public void EmbedMonochromeImage(MonochromeBitmap bitmap, bool encrypt)
         {
             if (bitmap == null)
             {
@@ -158,7 +158,12 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            this.setUpHeaderForSecretImage();
+            if (encrypt)
+            {
+                this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
+            }
+
+            this.setUpHeaderForSecretImage(encrypt);
         }
 
         /// <summary>
@@ -203,11 +208,11 @@ namespace GroupDStegafy.Model.Image
             this.setHeaderPixels();
         }
 
-        private void setUpHeaderForSecretImage()
+        private void setUpHeaderForSecretImage(bool hasEncryption)
         {
             this.HeaderPixels.HasSecretMessage = true;
             this.HeaderPixels.BitsPerColorChannel = 1;
-            this.HeaderPixels.HasEncryption = false;
+            this.HeaderPixels.HasEncryption = hasEncryption;
             this.HeaderPixels.IsSecretText = false;
 
             this.setHeaderPixels();
