@@ -13,7 +13,6 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class Bitmap : Image
     {
-
         #region Data Members
 
         private readonly byte[] pixelBytes;
@@ -74,6 +73,7 @@ namespace GroupDStegafy.Model.Image
             this.Height = (uint)this.pixelBytes.Length / (4 * this.Width);
             this.DpiX = dpix;
             this.DpiY = dpiy;
+
             this.createHeaderPixels();
         }
 
@@ -142,7 +142,8 @@ namespace GroupDStegafy.Model.Image
         ///     Post-condition: @each significant bit in the source image is replaced.
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
-        public void EmbedMonochromeImage(MonochromeBitmap bitmap)
+        /// <param name="encrypt">Whether or not to encrypt the image.</param>
+        public void EmbedMonochromeImage(MonochromeBitmap bitmap, bool encrypt)
         {
             if (bitmap == null)
             {
@@ -159,13 +160,18 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            this.setUpHeaderForSecretImage();
+            if (encrypt)
+            {
+                this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
+            }
+
+            this.setUpHeaderForSecretImage(encrypt);
         }
 
         /// <summary>
-        ///     Encodes the message in the bitmap.
+        ///     Embeds the text message in the bitmap pixels color bytes.
         ///     Precondition: message != null
-        ///     Post-condition: message replaces bits in pixel color channels
+        ///     Post-condition: message embedded in bitmap pixel color bytes
         /// </summary>
         /// <param name="message">The message.</param>
         /// <exception cref="ArgumentNullException">message</exception>
@@ -198,7 +204,7 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            this.SetUpHeaderForSecretTextMessage();
+            this.setUpHeaderForSecretTextMessage();
         }
 
         /// <summary>
@@ -231,30 +237,22 @@ namespace GroupDStegafy.Model.Image
             return TextDecodeUtility.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
         }
 
-        /// <summary>
-        ///     Sets up header for secret text message.
-        ///     Precondition: none
-        ///     Post-condition: HasSecretMessage = true
-        ///                     BitPerChannel = ?
-        ///                     HasEncryption = true
-        ///                     IsSecretText = true
-        /// </summary>
-        public void SetUpHeaderForSecretTextMessage()
-        {
-            this.HeaderPixels.HasSecretMessage = true;
-            this.HeaderPixels.IsSecretText = true;
-
-            this.setHeaderPixels();
-        }
-
         #endregion
 
         #region Private Helpers
 
-        private void setUpHeaderForSecretImage()
+        private void setUpHeaderForSecretTextMessage()
+        {
+            this.HeaderPixels.HasSecretMessage = true;
+            this.HeaderPixels.IsSecretText = true;
+            this.setHeaderPixels();
+        }
+
+        private void setUpHeaderForSecretImage(bool hasEncryption)
         {
             this.HeaderPixels.HasSecretMessage = true;
             this.HeaderPixels.BitsPerColorChannel = 1;
+            this.HeaderPixels.HasEncryption = hasEncryption;
             this.HeaderPixels.IsSecretText = false;
 
             this.setHeaderPixels();

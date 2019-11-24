@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
 using GroupDStegafy.FileIO;
@@ -19,30 +20,16 @@ namespace GroupDStegafy.ViewModel
 
         private Bitmap sourceBitmap;
         private MonochromeBitmap secretBitmap;
-        private string secretText;
+        private readonly string secretText;
 
         private bool canSaveSource;
         private bool canSaveSecret;
-
+        private bool encryptImageSelected;
+        private bool showEncryptedSelected;
+        
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets the secret text.
-        /// </summary>
-        /// <value>
-        /// The secret text.
-        /// </value>
-        public string SecretText
-        {
-            get => this.secretText;
-            private set
-            {
-                this.secretText = value;
-                this.OnPropertyChanged(nameof(this.SecretText));
-            }
-        }
 
         /// <summary>
         ///     Gets the source bitmap.
@@ -58,6 +45,8 @@ namespace GroupDStegafy.ViewModel
                 this.sourceBitmap = value;
                 this.OnPropertyChanged(nameof(this.SourceBitmap));
                 this.OnPropertyChanged(nameof(this.SourceWriteableBitmap));
+                this.OnPropertyChanged(nameof(this.ImageEncryptionVisibility));
+                this.OnPropertyChanged(nameof(this.ShowEncryptedVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
                 this.DecodeCommand.OnCanExecuteChanged();
             }
@@ -77,6 +66,7 @@ namespace GroupDStegafy.ViewModel
                 this.secretBitmap = value;
                 this.OnPropertyChanged(nameof(this.SecretBitmap));
                 this.OnPropertyChanged(nameof(this.SecretWriteableBitmap));
+                this.OnPropertyChanged(nameof(this.ImageEncryptionVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
             }
         }
@@ -129,6 +119,31 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        public Visibility ImageEncryptionVisibility => this.sourceBitmap != null && this.secretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
+
+        public bool EncryptImageSelected
+        {
+            get => this.encryptImageSelected;
+            set
+            {
+                this.encryptImageSelected = value;
+                this.OnPropertyChanged(nameof(this.EncryptImageSelected));
+            }
+        }
+
+        public Visibility ShowEncryptedVisibility => this.SourceBitmap != null && this.SourceBitmap.HasSecretMessage && this.SourceBitmap.HeaderPixels.HasEncryption
+                ? Visibility.Visible : Visibility.Collapsed;
+
+        public bool ShowEncryptedSelected
+        {
+            get => this.showEncryptedSelected;
+            set
+            {
+                this.showEncryptedSelected = value;
+                this.OnPropertyChanged(nameof(this.ShowEncryptedSelected));
+            }
+        }
+
         /// <summary>
         ///     Gets the encode command.
         /// </summary>
@@ -174,6 +189,7 @@ namespace GroupDStegafy.ViewModel
             {
                 this.SourceBitmap = await BitmapReader.ReadBitmap(file);
                 this.CanSaveSource = false;
+                
             }
         }
 
@@ -229,15 +245,7 @@ namespace GroupDStegafy.ViewModel
 
         private void encodeMessage(object obj)
         {
-            //TODO when text field is selected.
-            if (this.SecretText.Length != 0)
-            {
-                this.SourceBitmap.EmbedTextMessage(this.SecretText);
-            }
-            else
-            {
-                this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap);
-            }
+            this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
             this.EncodeCommand.OnCanExecuteChanged();
@@ -249,11 +257,15 @@ namespace GroupDStegafy.ViewModel
         {
             if (this.SourceBitmap.IsSecretText)
             {
-                this.SecretText = this.SourceBitmap.DecodeTextMessage();
+                //TODO decode text here
             }
             else
             {
                 this.SecretBitmap = MonochromeBitmap.FromEmbeddedSecret(this.SourceBitmap);
+                if (this.SourceBitmap.HeaderPixels.HasEncryption && !this.ShowEncryptedSelected)
+                {
+                    this.SecretBitmap = this.SecretBitmap.GetFlipped();
+                }
             }
             
             this.CanSaveSecret = true;

@@ -98,8 +98,6 @@ namespace GroupDStegafy.Model.Image
             return bitmap;
         }
 
-        #endregion
-
         /// <summary>
         ///     Gets the color of the pixel at the specified coordinates.
         ///     Precondition: X and Y are within image bounds
@@ -116,5 +114,29 @@ namespace GroupDStegafy.Model.Image
             var pixel = this.pixels[y*this.Width + x];
             return pixel ? Colors.White : Colors.Black;
         }
+
+        /// <summary>
+        ///     Returns a copy of the image with the top and bottom halves of the image flipped.
+        ///     Precondition: None
+        ///     Post-condition: None
+        /// </summary>
+        public MonochromeBitmap GetFlipped()
+        {
+            var halfHeight = this.Height / 2;
+            var pixels = new bool[this.pixels.Length];
+
+            for (var x = 0; x < this.Width; x++)
+            {
+                for (var y = 0; y < halfHeight; y++)
+                {
+                    pixels[y * this.Width + x] = this.pixels[(y + halfHeight) * this.Width + x];
+                    pixels[(y + halfHeight) * this.Width + x] = this.pixels[y * this.Width + x];
+                }
+            }
+
+            return new MonochromeBitmap(pixels, this.Width, this.Height);
+        }
+
+        #endregion
     }
 }
