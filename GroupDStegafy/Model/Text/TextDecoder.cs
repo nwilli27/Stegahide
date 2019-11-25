@@ -12,9 +12,7 @@ namespace GroupDStegafy.Model.Text
 
         #region Constants
 
-        private const int BaseForm = 2;
-        private const int TotalByteBits = 8;
-        private const char ZeroBit = '0';
+        private const int ByteLength = 8;
 
         public const string DecodingStopIndicator = "#.-.-.-#";
 
@@ -80,10 +78,8 @@ namespace GroupDStegafy.Model.Text
 
         private static string getMessageBitsFromChannel(byte colorChannel, int bitsPerColorChannel)
         {
-            var byteConversion = Convert.ToString(colorChannel, BaseForm);
-            var binaryConversion = byteConversion.PadLeft(TotalByteBits, ZeroBit);
-
-            return binaryConversion.Substring(TotalByteBits - bitsPerColorChannel, bitsPerColorChannel);
+            var byteConversion = colorChannel.ConvertToBaseFormTwo();
+            return byteConversion.Substring(ByteLength - bitsPerColorChannel, bitsPerColorChannel);
         }
 
         #endregion

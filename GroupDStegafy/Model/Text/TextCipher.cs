@@ -15,6 +15,7 @@ namespace GroupDStegafy.Model.Text
         private const string KeywordEnd = "#KEY#";
         private const char FirstCharacter = 'A';
         private const char LastCharacter = 'Z';
+        private const string AlphabetOnlyRegex = "[^a-zA-Z]";
 
         #endregion
 
@@ -23,8 +24,8 @@ namespace GroupDStegafy.Model.Text
         /// <summary>
         ///     Encrypts the text and adds the keyword to the front for
         ///     decryption purposes.
-        ///     Precondition: cipherText != null
-        ///                   keyword != null
+        ///     Precondition: none
+        ///     Post-condition: none
         /// </summary>
         /// <param name="plainText">The plain text.</param>
         /// <param name="keyword">The keyword.</param>
@@ -38,7 +39,8 @@ namespace GroupDStegafy.Model.Text
         /// <summary>
         ///     Decrypts the text by extracting the keyword and the message
         ///     to decrypt the underlying message.
-        ///     Precondition: encryptedText != null
+        ///     Precondition: none
+        ///     Post-condition: none
         /// </summary>
         /// <param name="encryptedText">The encrypted text.</param>
         /// <returns>The decrypted text message.</returns>
@@ -76,7 +78,10 @@ namespace GroupDStegafy.Model.Text
             {
                 textInput[i] = (char)(textInput[i] + keyword[keywordIndex] - FirstCharacter);
 
-                if (textInput[i] > LastCharacter) textInput[i] = (char)(textInput[i] - LastCharacter + FirstCharacter - 1);
+                if (textInput[i] > LastCharacter)
+                {
+                    textInput[i] = (char)(textInput[i] - LastCharacter + FirstCharacter - 1);
+                }
                 
                 keywordIndex = incrementKeywordIndex(keyword, keywordIndex);
             }
@@ -109,7 +114,7 @@ namespace GroupDStegafy.Model.Text
 
         private static StringBuilder getStringBuilderForCipher(string cipherText)
         {
-            var keepAlphabetical = Regex.Replace(cipherText, "[^a-zA-Z]", string.Empty);
+            var keepAlphabetical = Regex.Replace(cipherText, AlphabetOnlyRegex, string.Empty);
             return new StringBuilder(keepAlphabetical.ToUpper());
         }
 
