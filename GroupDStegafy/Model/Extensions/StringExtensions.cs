@@ -62,27 +62,27 @@ namespace GroupDStegafy.Model.Extensions
 
         /// <summary>
         ///     Splits the string in parts based on the [partLength]. Returns the split string
-        ///     as a list.
+        ///     as a queue.
         ///     Precondition: partLength > 0
         ///     Post-condition: none
         /// </summary>
         /// <param name="stringInput">The string input.</param>
         /// <param name="partLength">Length of the part.</param>
-        /// <returns>A list of the split string</returns>
+        /// <returns>A queue of the split string</returns>
         /// <exception cref="ArgumentException">Part length has to be positive. - partLength</exception>
-        public static IList<string> SplitInParts(this string stringInput, int partLength)
+        public static Queue<string> SplitInParts(this string stringInput, int partLength)
         {
             if (partLength <= 0)
             {
                 throw new ArgumentException("Part length has to be positive.", nameof(partLength));
             }
 
-            var splitList = new List<string>();
+            var splitList = new Queue<string>();
             
             for (var i = 0; i < stringInput.Length; i += partLength)
             {
                 var part = stringInput.Substring(i, Math.Min(partLength, stringInput.Length - i));
-                splitList.Add(part);
+                splitList.Enqueue(part);
             }
 
             return splitList;

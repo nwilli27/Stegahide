@@ -185,18 +185,18 @@ namespace GroupDStegafy.Model.Image
             }
 
             var binaryMessage = this.setupTextMessage(message, encryptionKey);
-            var binaryMessageBits = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
+            var binaryMessageBitQueue = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
 
             for (var x = 0; x < this.Width; x++)
             {
                 for (var y = 0; y < this.Height; y++)
                 {
-                    if (binaryMessageBits.Count == 0)
+                    if (binaryMessageBitQueue.Count == 0)
                     {
                         break;
                     }
 
-                    this.embedMessageBitsInPixel(x, y, binaryMessageBits);
+                    this.embedMessageBitsInPixel(x, y, binaryMessageBitQueue);
                 }
             }
 
@@ -234,12 +234,12 @@ namespace GroupDStegafy.Model.Image
 
         #region Private Helpers
 
-        private void embedMessageBitsInPixel(int x, int y, IList<string> binaryBitsPerChannel)
+        private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {
             var pixelColor = this.GetPixelColor(x, y);
             if (!areHeaderPixels(x, y))
             {
-                pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryBitsPerChannel);
+                pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryMessageBitQueue);
             }
 
             this.SetPixelColor(x, y, pixelColor);

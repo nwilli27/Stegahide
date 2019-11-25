@@ -75,12 +75,9 @@ namespace GroupDStegafy.Model.Text
 
             for (var i = 0; i < textInput.Length; i++)
             {
-                if (char.IsLetter(textInput[i]))
-                {
-                    textInput[i] = (char)(textInput[i] + keyword[keywordIndex] - FirstCharacter);
-                    if (textInput[i] > LastCharacter) textInput[i] = (char)(textInput[i] - LastCharacter + FirstCharacter - 1);
-                }
-
+                textInput[i] = (char)(textInput[i] + keyword[keywordIndex] - FirstCharacter);
+                if (textInput[i] > LastCharacter) textInput[i] = (char)(textInput[i] - LastCharacter + FirstCharacter - 1);
+                
                 keywordIndex = keywordIndex + 1 == keyword.Length ? 0 : keywordIndex + 1;
             }
 
@@ -96,12 +93,9 @@ namespace GroupDStegafy.Model.Text
 
             for (var i = 0; i < textInput.Length; i++)
             {
-                if (char.IsLetter(textInput[i]))
-                {
-                    textInput[i] = textInput[i] >= keyword[keywordIndex] ?
-                        (char)(textInput[i] - keyword[keywordIndex] + FirstCharacter) :
-                        (char)(FirstCharacter + (LastCharacter - keyword[keywordIndex] + textInput[i] - FirstCharacter) + 1);
-                }
+                textInput[i] = textInput[i] >= keyword[keywordIndex] ? 
+                    (char)(textInput[i] - keyword[keywordIndex] + FirstCharacter) : 
+                    (char)(FirstCharacter + (LastCharacter - keyword[keywordIndex] + textInput[i] - FirstCharacter) + 1);
 
                 keywordIndex = keywordIndex + 1 == keyword.Length ? 0 : keywordIndex + 1;
             }
