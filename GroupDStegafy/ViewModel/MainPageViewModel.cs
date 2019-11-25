@@ -28,6 +28,7 @@ namespace GroupDStegafy.ViewModel
         private bool encryptImageSelected;
         private bool showEncryptedSelected;
         private string encryptionKey;
+        private int bitsPerColorChannel;
         
         #endregion
 
@@ -177,6 +178,16 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        public int BitsPerColorChannel
+        {
+            get => this.bitsPerColorChannel;
+            set
+            {
+                this.bitsPerColorChannel = value;
+                this.OnPropertyChanged(nameof(this.BitsPerColorChannel));
+            }
+        }
+
         /// <summary>
         ///     Gets the encode command.
         /// </summary>
@@ -204,6 +215,7 @@ namespace GroupDStegafy.ViewModel
         {
             this.EncodeCommand = new RelayCommand(this.encodeMessage, this.canEncodeMessage);
             this.DecodeCommand = new RelayCommand(this.decodeMessage, this.canDecodeMessage);
+            this.bitsPerColorChannel = 1;
         }
 
         #endregion
@@ -291,7 +303,7 @@ namespace GroupDStegafy.ViewModel
             }
             else
             {
-                this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey);
+                this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey, this.BitsPerColorChannel);
             }
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
