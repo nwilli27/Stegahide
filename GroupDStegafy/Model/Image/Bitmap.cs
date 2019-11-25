@@ -287,7 +287,6 @@ namespace GroupDStegafy.Model.Image
         private void setUpHeaderForSecretImage(bool hasEncryption)
         {
             this.HeaderPixels.HasSecretMessage = true;
-            this.HeaderPixels.BitsPerColorChannel = 1;
             this.HeaderPixels.HasEncryption = hasEncryption;
             this.HeaderPixels.IsSecretText = false;
 
