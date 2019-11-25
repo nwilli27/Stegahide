@@ -46,7 +46,7 @@ namespace GroupDStegafy.Model.Image
                    this.firstPixelColor.G == EncryptionColorCode &&
                    this.firstPixelColor.B == EncryptionColorCode;
 
-            set => this.setFirstPixelToSecretMessageColorCode(value);
+            set => this.setHasSecretMessage(value);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace GroupDStegafy.Model.Image
         public bool HasEncryption
         {
             get => this.secondPixelColor.R.IsLeastSignificantBitOne();
-            set => this.setSecondPixelEncryptionStatus(value);
+            set => this.setEncrypted(value);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace GroupDStegafy.Model.Image
         public bool IsSecretText
         {
             get => this.secondPixelColor.B.IsLeastSignificantBitOne();
-            set => this.setSecondPixelIsSecretTextStatus(value);
+            set => this.setIsText(value);
         } 
 
         #endregion
@@ -113,9 +113,9 @@ namespace GroupDStegafy.Model.Image
 
         #region Private Helpers
 
-        private void setFirstPixelToSecretMessageColorCode(bool canSetFirstPixel)
+        private void setHasSecretMessage(bool value)
         {
-            if (canSetFirstPixel)
+            if (value)
             {
                 this.firstPixelColor.R = EncryptionColorCode;
                 this.firstPixelColor.G = EncryptionColorCode;
@@ -123,16 +123,16 @@ namespace GroupDStegafy.Model.Image
             }
         }
 
-        private void setSecondPixelEncryptionStatus(bool canSetEncryptionStatus)
+        private void setEncrypted(bool value)
         {
-            this.secondPixelColor.R = canSetEncryptionStatus ?
+            this.secondPixelColor.R = value ?
                                       this.secondPixelColor.R.SetLeastSignificantBit(true) :
                                       this.secondPixelColor.R.SetLeastSignificantBit(false);
         }
 
-        private void setSecondPixelIsSecretTextStatus(bool canSetIsSecretTextStatus)
+        private void setIsText(bool value)
         {
-            this.secondPixelColor.B = canSetIsSecretTextStatus ?
+            this.secondPixelColor.B = value ?
                                       this.secondPixelColor.B.SetLeastSignificantBit(true) :
                                       this.secondPixelColor.B.SetLeastSignificantBit(false);
         }
