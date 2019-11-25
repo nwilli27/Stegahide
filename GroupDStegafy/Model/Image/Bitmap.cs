@@ -54,6 +54,14 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public bool IsSecretText => this.HeaderPixels.IsSecretText;
 
+        /// <summary>
+        /// Gets or sets the header pixels.
+        /// </summary>
+        /// <value>
+        /// The header pixels.
+        /// </value>
+        public HeaderPixels HeaderPixels { get; private set; }
+
         #endregion
 
         #region Constructors
