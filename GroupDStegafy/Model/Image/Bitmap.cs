@@ -54,6 +54,14 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public bool IsSecretText => this.HeaderPixels.IsSecretText;
 
+        /// <summary>
+        /// Gets or sets the header pixels.
+        /// </summary>
+        /// <value>
+        /// The header pixels.
+        /// </value>
+        public HeaderPixels HeaderPixels { get; private set; }
+
         #endregion
 
         #region Constructors
@@ -238,7 +246,7 @@ namespace GroupDStegafy.Model.Image
         {
             var pixelColor = this.GetPixelColor(x, y);
 
-            if (!areHeaderPixels(x, y))
+            if (!isHeaderPixel(x, y))
             {
                 pixelColor = TextEncoder.EmbedCharacterBitsToColor(pixelColor, binaryMessageBitQueue);
             }
@@ -250,7 +258,7 @@ namespace GroupDStegafy.Model.Image
         {
             var pixelColor = this.GetPixelColor(x, y);
 
-            if (!areHeaderPixels(x, y))
+            if (!isHeaderPixel(x, y))
             {
                 binaryMessage += TextDecoder.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
             }
@@ -307,7 +315,7 @@ namespace GroupDStegafy.Model.Image
             this.HeaderPixels = new HeaderPixels(pixelOne, pixelTwo);
         }
 
-        private static bool areHeaderPixels(int x, int y)
+        private static bool isHeaderPixel(int x, int y)
         {
             return (x == 0 && y == 0) || (x == 0 && y == 1);
         }

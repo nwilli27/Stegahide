@@ -8,6 +8,11 @@ namespace GroupDStegafy.Model.Image
     /// </summary>
     public class HeaderPixels
     {
+        #region Constants
+
+        private readonly Color encryptionColorCode = Color.FromArgb(255,212,212,212);
+
+        #endregion
 
         #region Data Members
 
@@ -42,11 +47,8 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public bool HasSecretMessage
         {
-            get => this.firstPixelColor.R == EncryptionColorCode &&
-                   this.firstPixelColor.G == EncryptionColorCode &&
-                   this.firstPixelColor.B == EncryptionColorCode;
-
-            set => this.setFirstPixelToSecretMessageColorCode(value);
+            get => this.firstPixelColor.Equals(this.encryptionColorCode);
+            set => this.firstPixelColor = value ? this.encryptionColorCode : Colors.Black;
         }
 
         /// <summary>
@@ -57,8 +59,8 @@ namespace GroupDStegafy.Model.Image
         /// </value>
         public bool HasEncryption
         {
-            get => this.secondPixelColor.R.IsLeastSignificantBitOne();
-            set => this.setSecondPixelEncryptionStatus(value);
+            get => this.secondPixelColor.R.IsLeastSignificantBitOne() && this.HasSecretMessage;
+            set => this.secondPixelColor.R = this.secondPixelColor.R.SetLeastSignificantBit(value);
         }
 
         /// <summary>
@@ -82,15 +84,9 @@ namespace GroupDStegafy.Model.Image
         public bool IsSecretText
         {
             get => this.secondPixelColor.B.IsLeastSignificantBitOne();
-            set => this.setSecondPixelIsSecretTextStatus(value);
+            set => this.secondPixelColor.B = this.secondPixelColor.B.SetLeastSignificantBit(value);
         } 
 
-        #endregion
-
-        #region Constants
-
-        private const int EncryptionColorCode = 212;
-        
         #endregion
 
         #region Constructors
@@ -107,34 +103,6 @@ namespace GroupDStegafy.Model.Image
         {
             this.firstPixelColor = pixelOne;
             this.secondPixelColor = pixelTwo;
-        }
-
-        #endregion
-
-        #region Private Helpers
-
-        private void setFirstPixelToSecretMessageColorCode(bool canSetFirstPixel)
-        {
-            if (canSetFirstPixel)
-            {
-                this.firstPixelColor.R = EncryptionColorCode;
-                this.firstPixelColor.G = EncryptionColorCode;
-                this.firstPixelColor.B = EncryptionColorCode;
-            }
-        }
-
-        private void setSecondPixelEncryptionStatus(bool canSetEncryptionStatus)
-        {
-            this.secondPixelColor.R = canSetEncryptionStatus ?
-                                      this.secondPixelColor.R.SetLeastSignificantBit(true) :
-                                      this.secondPixelColor.R.SetLeastSignificantBit(false);
-        }
-
-        private void setSecondPixelIsSecretTextStatus(bool canSetIsSecretTextStatus)
-        {
-            this.secondPixelColor.B = canSetIsSecretTextStatus ?
-                                      this.secondPixelColor.B.SetLeastSignificantBit(true) :
-                                      this.secondPixelColor.B.SetLeastSignificantBit(false);
         }
 
         #endregion
