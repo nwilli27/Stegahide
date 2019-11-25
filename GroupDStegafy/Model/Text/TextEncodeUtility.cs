@@ -45,14 +45,14 @@ namespace GroupDStegafy.Model.Text
 
         private static byte addCharacterBitsToChannel(IList<string> binaryBits, byte colorChannel)
         {
-            if (binaryBits.Count > 0)
+            if (binaryBits.Count == 0)
             {
-                var byteToMask = binaryBits[0];
-                binaryBits.Remove(byteToMask);
-                return colorChannel.MaskByteWithBitSequence(byteToMask);
+                return colorChannel;
             }
 
-            return colorChannel;
+            var byteToMask = binaryBits[0];
+            binaryBits.Remove(byteToMask);
+            return colorChannel.MaskByteWithBitSequence(byteToMask);
         }
 
         #endregion

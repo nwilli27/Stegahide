@@ -182,7 +182,7 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var messageWithStop = message + TextDecodeUtility.DecodingStopIndicator;
+            var messageWithStop = message + TextDecodeUtility.DecodingStopIndicator + " ";
             var binaryMessage = messageWithStop.ConvertToBinary();
             var binaryBitsPerChannel = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
 

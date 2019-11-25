@@ -71,7 +71,7 @@ namespace GroupDStegafy.Model.Text
         {
             var message = binaryMessage.ConvertBinaryToString().Trim();
             message = message.Substring(Math.Max(0, message.Length - DecodingStopIndicator.Length));
-            return message.Equals(DecodingStopIndicator);
+            return message.Contains(DecodingStopIndicator);
         }
 
         #endregion
