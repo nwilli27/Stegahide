@@ -220,7 +220,7 @@ namespace GroupDStegafy.Model.Image
                     if (TextDecoder.IsFinishedDecoding(binaryMessage))
                     {
                         break;
-                    }
+                    } 
 
                     binaryMessage = this.extractMessageBitsFromPixel(x, y, binaryMessage);
                 }
