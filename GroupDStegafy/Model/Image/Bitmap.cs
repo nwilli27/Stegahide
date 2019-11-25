@@ -239,7 +239,7 @@ namespace GroupDStegafy.Model.Image
             var pixelColor = this.GetPixelColor(x, y);
             if (!areHeaderPixels(x, y))
             {
-                pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryMessageBitQueue);
+                TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryMessageBitQueue);
             }
 
             this.SetPixelColor(x, y, pixelColor);
