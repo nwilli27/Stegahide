@@ -21,7 +21,7 @@ namespace GroupDStegafy.Model.Text
         /// </summary>
         /// <param name="pixelColor">Color of the pixel.</param>
         /// <param name="binaryMessageBitQueue">The binary message bits.</param>
-        public static void EmbedCharacterBitsToColor(Color pixelColor, Queue<string> binaryMessageBitQueue)
+        public static Color EmbedCharacterBitsToColor(Color pixelColor, Queue<string> binaryMessageBitQueue)
         {
             if (pixelColor == null)
             {
@@ -31,6 +31,8 @@ namespace GroupDStegafy.Model.Text
             pixelColor.R = addCharacterBitsToChannel(binaryMessageBitQueue, pixelColor.R);
             pixelColor.G = addCharacterBitsToChannel(binaryMessageBitQueue, pixelColor.G);
             pixelColor.B = addCharacterBitsToChannel(binaryMessageBitQueue, pixelColor.B);
+
+            return pixelColor;
         }
 
         #endregion
