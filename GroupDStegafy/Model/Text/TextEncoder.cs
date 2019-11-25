@@ -14,13 +14,14 @@ namespace GroupDStegafy.Model.Text
         #region Methods 
 
         /// <summary>
-        ///     Embeds the character bits in the passed-in color object.
+        ///     Embeds the character bits in the color and returns the modified copy.
         ///     Precondition: pixelColor != null
         ///                   binaryMessageBits != null
-        ///     Post-condition: pixelColor is modified
+        ///     Post-condition: none
         /// </summary>
         /// <param name="pixelColor">Color of the pixel.</param>
         /// <param name="binaryMessageBitQueue">The binary message bits.</param>
+        /// <returns>The new color</returns>
         public static Color EmbedCharacterBitsToColor(Color pixelColor, Queue<string> binaryMessageBitQueue)
         {
             if (pixelColor == null)
