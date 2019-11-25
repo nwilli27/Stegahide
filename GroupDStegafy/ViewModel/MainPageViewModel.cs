@@ -27,6 +27,7 @@ namespace GroupDStegafy.ViewModel
         private bool canSaveSecret;
         private bool encryptImageSelected;
         private bool showEncryptedSelected;
+        private string encryptionKey;
         
         #endregion
 
@@ -166,6 +167,16 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        public string EncryptionKey
+        {
+            get => this.encryptionKey;
+            set
+            {
+                this.encryptionKey = value;
+                this.OnPropertyChanged(nameof(this.EncryptionKey));
+            }
+        }
+
         /// <summary>
         ///     Gets the encode command.
         /// </summary>
@@ -280,9 +291,8 @@ namespace GroupDStegafy.ViewModel
             }
             else
             {
-                // TODO use the encoding options - temporary placeholder for encryption
                 this.SourceBitmap.HeaderPixels.HasEncryption = true;
-                this.SourceBitmap.EmbedTextMessage(this.SecretText, "hotdog");
+                this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey);
             }
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
