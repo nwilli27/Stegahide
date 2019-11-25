@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Windows.UI;
 using GroupDStegafy.Model.Extensions;
 
@@ -14,21 +13,14 @@ namespace GroupDStegafy.Model.Text
         #region Methods 
 
         /// <summary>
-        ///     Embeds the character bits in the color and returns the modified copy.
-        ///     Precondition: pixelColor != null
-        ///                   binaryMessageBits != null
-        ///     Post-condition: none
+        ///     Embeds the character bits in the passed-in color object.
+        ///     Precondition: none
+        ///     Post-condition: pixelColor is modified
         /// </summary>
         /// <param name="pixelColor">Color of the pixel.</param>
         /// <param name="binaryMessageBitQueue">The binary message bits.</param>
-        /// <returns>The new color</returns>
         public static Color EmbedCharacterBitsToColor(Color pixelColor, Queue<string> binaryMessageBitQueue)
         {
-            if (pixelColor == null)
-            {
-                throw new ArgumentNullException(nameof(pixelColor));
-            }
-
             pixelColor.R = addCharacterBitsToChannel(binaryMessageBitQueue, pixelColor.R);
             pixelColor.G = addCharacterBitsToChannel(binaryMessageBitQueue, pixelColor.G);
             pixelColor.B = addCharacterBitsToChannel(binaryMessageBitQueue, pixelColor.B);
