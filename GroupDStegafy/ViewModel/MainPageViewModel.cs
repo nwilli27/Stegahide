@@ -281,8 +281,8 @@ namespace GroupDStegafy.ViewModel
             else
             {
                 // TODO use the encoding options - temporary placeholder for encryption
-                this.SourceBitmap.HeaderPixels.HasEncryption = true;
-                this.SourceBitmap.EmbedTextMessage(this.SecretText, "hotdog");
+                
+                this.SourceBitmap.EmbedTextMessage(this.SecretText, "");
             }
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
