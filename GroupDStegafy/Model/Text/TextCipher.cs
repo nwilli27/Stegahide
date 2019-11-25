@@ -23,7 +23,7 @@ namespace GroupDStegafy.Model.Text
         /// <summary>
         ///     Encrypts the text and adds the keyword to the front for
         ///     decryption purposes.
-        ///     Precondition: plainText != null
+        ///     Precondition: cipherText != null
         ///                   keyword != null
         /// </summary>
         /// <param name="plainText">The plain text.</param>
@@ -68,17 +68,17 @@ namespace GroupDStegafy.Model.Text
 
         private static string encryptText(string plainText, string keyword)
         {
-            var keepAlphabet = Regex.Replace(plainText, "[^a-zA-Z]", string.Empty);
-            var textInput = new StringBuilder(keepAlphabet.ToUpper());
+            var textInput = getStringBuilderForCipher(plainText);
             keyword = keyword.ToUpper();
             var keywordIndex = 0;
 
             for (var i = 0; i < textInput.Length; i++)
             {
                 textInput[i] = (char)(textInput[i] + keyword[keywordIndex] - FirstCharacter);
+
                 if (textInput[i] > LastCharacter) textInput[i] = (char)(textInput[i] - LastCharacter + FirstCharacter - 1);
                 
-                keywordIndex = keywordIndex + 1 == keyword.Length ? 0 : keywordIndex + 1;
+                keywordIndex = incrementKeywordIndex(keyword, keywordIndex);
             }
 
             return textInput.ToString();
@@ -86,8 +86,7 @@ namespace GroupDStegafy.Model.Text
 
         private static string decryptText(string encryptedText, string keyword)
         {
-            var keepAlphabet = Regex.Replace(encryptedText, "[^a-zA-Z]", string.Empty);
-            var textInput = new StringBuilder(keepAlphabet.ToUpper());
+            var textInput = getStringBuilderForCipher(encryptedText);
             keyword = keyword.ToUpper();
             var keywordIndex = 0;
 
@@ -97,10 +96,21 @@ namespace GroupDStegafy.Model.Text
                     (char)(textInput[i] - keyword[keywordIndex] + FirstCharacter) : 
                     (char)(FirstCharacter + (LastCharacter - keyword[keywordIndex] + textInput[i] - FirstCharacter) + 1);
 
-                keywordIndex = keywordIndex + 1 == keyword.Length ? 0 : keywordIndex + 1;
+                keywordIndex = incrementKeywordIndex(keyword, keywordIndex);
             }
 
             return textInput.ToString();
+        }
+
+        private static int incrementKeywordIndex(string keyword, int keywordIndex)
+        {
+            return keywordIndex + 1 == keyword.Length ? 0 : keywordIndex + 1;
+        }
+
+        private static StringBuilder getStringBuilderForCipher(string cipherText)
+        {
+            var keepAlphabetical = Regex.Replace(cipherText, "[^a-zA-Z]", string.Empty);
+            return new StringBuilder(keepAlphabetical.ToUpper());
         }
 
         #endregion

@@ -7,7 +7,7 @@ namespace GroupDStegafy.Model.Text
     /// <summary>
     ///     Class responsible for decoding text from a Bitmap image.
     /// </summary>
-    internal class TextDecodeUtility
+    internal class TextDecoder
     {
 
         #region Constants

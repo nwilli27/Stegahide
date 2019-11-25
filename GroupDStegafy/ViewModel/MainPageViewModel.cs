@@ -291,7 +291,6 @@ namespace GroupDStegafy.ViewModel
             }
             else
             {
-                this.SourceBitmap.HeaderPixels.HasEncryption = true;
                 this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey);
             }
 

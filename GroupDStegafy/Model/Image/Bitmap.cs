@@ -217,7 +217,7 @@ namespace GroupDStegafy.Model.Image
             {
                 for (var y = 0; y < this.Height; y++)
                 {
-                    if (TextDecodeUtility.IsFinishedDecoding(binaryMessage))
+                    if (TextDecoder.IsFinishedDecoding(binaryMessage))
                     {
                         break;
                     }
@@ -227,7 +227,7 @@ namespace GroupDStegafy.Model.Image
             }
 
             return this.HeaderPixels.HasEncryption ? TextCipher.DecryptText(binaryMessage.ConvertBinaryToString()) : 
-                                                     TextDecodeUtility.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
+                                                     TextDecoder.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
         }
 
         #endregion
@@ -237,9 +237,10 @@ namespace GroupDStegafy.Model.Image
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {
             var pixelColor = this.GetPixelColor(x, y);
+
             if (!areHeaderPixels(x, y))
             {
-                pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryMessageBitQueue);
+                pixelColor = TextEncoder.EmbedCharacterBitsToColor(pixelColor, binaryMessageBitQueue);
             }
 
             this.SetPixelColor(x, y, pixelColor);
@@ -248,9 +249,10 @@ namespace GroupDStegafy.Model.Image
         private string extractMessageBitsFromPixel(int x, int y, string binaryMessage)
         {
             var pixelColor = this.GetPixelColor(x, y);
+
             if (!areHeaderPixels(x, y))
             {
-                binaryMessage += TextDecodeUtility.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
+                binaryMessage += TextDecoder.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
             }
 
             return binaryMessage;
@@ -259,7 +261,7 @@ namespace GroupDStegafy.Model.Image
         private string setupTextMessage(string message, string encryptionKey)
         {
             message = this.checkToEncryptText(message, encryptionKey);
-            message += TextDecodeUtility.DecodingStopIndicator + " ";
+            message += TextDecoder.DecodingStopIndicator + " ";
             return message.ConvertToBinary();
         }
 
@@ -268,7 +270,7 @@ namespace GroupDStegafy.Model.Image
             if (!string.IsNullOrEmpty(encryptionKey))
             {
                 this.HeaderPixels.HasEncryption = true;
-                message = TextCipher.EncryptTextWithKey(message, encryptionKey);
+                return TextCipher.EncryptTextWithKey(message, encryptionKey);
             }
 
             this.HeaderPixels.HasEncryption = false;

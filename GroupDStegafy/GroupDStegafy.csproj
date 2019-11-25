@@ -126,8 +126,8 @@
     <Compile Include="Model\Image\HeaderPixels.cs" />
     <Compile Include="Model\Image\Image.cs" />
     <Compile Include="Model\Image\MonochromeBitmap.cs" />
-    <Compile Include="Model\Text\TextDecodeUtility.cs" />
-    <Compile Include="Model\Text\TextEncodeUtility.cs" />
+    <Compile Include="Model\Text\TextDecoder.cs" />
+    <Compile Include="Model\Text\TextEncoder.cs" />
     <Compile Include="Model\Text\TextCipher.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\MainPageViewModel.cs" />
