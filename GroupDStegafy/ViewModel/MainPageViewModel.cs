@@ -280,8 +280,9 @@ namespace GroupDStegafy.ViewModel
             }
             else
             {
-                // TODO use the encoding options
-                this.SourceBitmap.EmbedTextMessage(this.SecretText);
+                // TODO use the encoding options - temporary placeholder for encryption
+                this.SourceBitmap.HeaderPixels.HasEncryption = true;
+                this.SourceBitmap.EmbedTextMessage(this.SecretText, "hotdog");
             }
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.UI;
@@ -174,33 +175,31 @@ namespace GroupDStegafy.Model.Image
         ///     Post-condition: message embedded in bitmap pixel color bytes
         /// </summary>
         /// <param name="message">The message.</param>
+        /// <param name="encryptionKey">The encryption key.</param>
         /// <exception cref="ArgumentNullException">message</exception>
-        public void EmbedTextMessage(string message)
+        public void EmbedTextMessage(string message, string encryptionKey)
         {
             if (message == null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
 
+            message = checkToEncryptText(message, encryptionKey);
+
             var messageWithStop = message + TextDecodeUtility.DecodingStopIndicator + " ";
             var binaryMessage = messageWithStop.ConvertToBinary();
-            var binaryBitsPerChannel = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
+            var binaryMessageBits = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
 
             for (var x = 0; x < this.Width; x++)
             {
                 for (var y = 0; y < this.Height; y++)
                 {
-                    if (binaryBitsPerChannel.Count == 0)
+                    if (binaryMessageBits.Count == 0)
                     {
                         break;
                     }
 
-                    var pixelColor = this.GetPixelColor(x, y);
-                    if (!areHeaderPixels(x, y))
-                    {
-                        pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryBitsPerChannel);
-                    }
-                    this.SetPixelColor(x, y, pixelColor);
+                    this.embedMessageBitsInPixel(x, y, binaryMessageBits);
                 }
             }
 
@@ -215,7 +214,7 @@ namespace GroupDStegafy.Model.Image
         /// <returns>The embedded text message from the color channel bytes.</returns>
         public string DecodeTextMessage()
         {
-            var binaryMessage = "";
+            var binaryMessage = string.Empty;
 
             for (var x = 0; x < this.Width; x++)
             {
@@ -226,20 +225,49 @@ namespace GroupDStegafy.Model.Image
                         break;
                     }
 
-                    var pixelColor = this.GetPixelColor(x, y);
-                    if (!areHeaderPixels(x, y))
-                    {
-                        binaryMessage += TextDecodeUtility.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
-                    }
+                    binaryMessage = this.extractMessageBitsFromPixel(x, y, binaryMessage);
                 }
             }
 
-            return TextDecodeUtility.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
+            return this.HeaderPixels.HasEncryption ? TextCipher.DecryptText(binaryMessage.ConvertBinaryToString()) : 
+                                                     TextDecodeUtility.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
         }
 
         #endregion
 
         #region Private Helpers
+
+        private void embedMessageBitsInPixel(int x, int y, IList<string> binaryBitsPerChannel)
+        {
+            var pixelColor = this.GetPixelColor(x, y);
+            if (!areHeaderPixels(x, y))
+            {
+                pixelColor = TextEncodeUtility.EmbedCharacterBitsToColor(pixelColor, binaryBitsPerChannel);
+            }
+
+            this.SetPixelColor(x, y, pixelColor);
+        }
+
+        private string extractMessageBitsFromPixel(int x, int y, string binaryMessage)
+        {
+            var pixelColor = this.GetPixelColor(x, y);
+            if (!areHeaderPixels(x, y))
+            {
+                binaryMessage += TextDecodeUtility.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
+            }
+
+            return binaryMessage;
+        }
+
+        private static string checkToEncryptText(string message, string encryptionKey)
+        {
+            if (!string.IsNullOrEmpty(encryptionKey))
+            {
+                message = TextCipher.EncryptTextWithKey(message, encryptionKey);
+            }
+
+            return message;
+        }
 
         private void setUpHeaderForSecretTextMessage()
         {

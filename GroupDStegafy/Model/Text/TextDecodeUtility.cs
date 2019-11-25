@@ -37,7 +37,7 @@ namespace GroupDStegafy.Model.Text
                 throw new ArgumentNullException(nameof(pixelColor));
             }
 
-            var binaryMessage = "";
+            var binaryMessage = string.Empty;
 
             binaryMessage += getMessageBitsFromChannel(pixelColor.R, bitsPerColorChannel);
             binaryMessage += getMessageBitsFromChannel(pixelColor.G, bitsPerColorChannel);
@@ -55,7 +55,7 @@ namespace GroupDStegafy.Model.Text
         /// <returns>A string with the decode indicator removed.</returns>
         public static string RemoveDecodeIndicator(string message)
         {
-            return message.Replace(DecodingStopIndicator, "");
+            return message.Replace(DecodingStopIndicator, string.Empty);
         }
 
         /// <summary>
