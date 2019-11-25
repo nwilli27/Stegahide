@@ -184,10 +184,7 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(message));
             }
 
-            message = checkToEncryptText(message, encryptionKey);
-
-            var messageWithStop = message + TextDecodeUtility.DecodingStopIndicator + " ";
-            var binaryMessage = messageWithStop.ConvertToBinary();
+            var binaryMessage = setupTextMessage(message, encryptionKey);
             var binaryMessageBits = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
 
             for (var x = 0; x < this.Width; x++)
@@ -257,6 +254,13 @@ namespace GroupDStegafy.Model.Image
             }
 
             return binaryMessage;
+        }
+
+        private static string setupTextMessage(string message, string encryptionKey)
+        {
+            message = checkToEncryptText(message, encryptionKey);
+            message += TextDecodeUtility.DecodingStopIndicator + " ";
+            return message.ConvertToBinary();
         }
 
         private static string checkToEncryptText(string message, string encryptionKey)
