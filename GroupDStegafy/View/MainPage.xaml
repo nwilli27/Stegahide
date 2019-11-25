@@ -42,7 +42,7 @@
         <Button Name="encodeButton" Content="Encode" Canvas.Left="729" Canvas.Top="333" Width="{StaticResource ButtonWidth}" Command="{Binding EncodeCommand}"/>
         <StackPanel Name="textEncodingOptions" Canvas.Left="697" Canvas.Top="386" Visibility="{Binding TextEncodingVisibility}">
             <TextBlock  TextWrapping="Wrap" Height="32" FontSize="10"><Run Text="Encryption Key"/><LineBreak/><Run Text="(blank for none)"/></TextBlock>
-            <TextBox x:Name="encryptionKeyTextBox" Text="" TextWrapping="Wrap" Width="107"/>
+            <TextBox x:Name="encryptionKeyTextBox" Text="{Binding EncryptionKey, Mode=TwoWay}" TextWrapping="Wrap" Width="107"/>
             <TextBlock TextWrapping="Wrap" Height="19" FontSize="10" Text="Bits used per color"/>
             <Slider x:Name="bitsPerColorSlider" Width="107" Maximum="8" Minimum="1" Value="1" SmallChange="1" LargeChange="1"/>
         </StackPanel>
