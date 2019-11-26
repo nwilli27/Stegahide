@@ -208,7 +208,7 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            this.setUpHeaderForSecretTextMessage(encryptionKey.Length != 0, bitsPerColorChannel);
+            this.setUpHeaderForSecretTextMessage(!string.IsNullOrEmpty(encryptionKey), bitsPerColorChannel);
         }
 
         /// <summary>
@@ -287,21 +287,15 @@ namespace GroupDStegafy.Model.Image
 
         private string setupTextMessage(string message, string encryptionKey)
         {
-            message = this.checkToEncryptText(message, encryptionKey);
+            message = checkToEncryptText(message, encryptionKey);
             message += TextDecoder.DecodingStopIndicator + " ";
             return message.ConvertToBinary();
         }
 
-        private string checkToEncryptText(string message, string encryptionKey)
+        private static string checkToEncryptText(string message, string encryptionKey)
         {
-            if (!string.IsNullOrEmpty(encryptionKey))
-            {
-                this.HeaderPixels.HasEncryption = true;
-                return TextCipher.EncryptTextWithKey(message, encryptionKey);
-            }
-
-            this.HeaderPixels.HasEncryption = false;
-            return message;
+            return !string.IsNullOrEmpty(encryptionKey) ? 
+                TextCipher.EncryptTextWithKey(message, encryptionKey) : message;
         }
 
         private void setUpHeaderForSecretTextMessage(bool hasEncryption, int bitsPerColorChannel)
