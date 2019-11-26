@@ -22,6 +22,7 @@ namespace GroupDStegafy.View
         public MainPage()
         {
             this.InitializeComponent();
+            ((MainPageViewModel) DataContext).MessageTooLarge += this.showMessageToLargePopup;
         }
 
         #endregion
@@ -84,6 +85,19 @@ namespace GroupDStegafy.View
             fileSavePicker.FileTypeChoices.Add("PNG files", new List<string> { ".png" });
             var file = await fileSavePicker.PickSaveFileAsync();
             return file;
+        }
+
+        private async void showMessageToLargePopup(object sender, object e)
+        {
+            var messageToLargeDialog = new ContentDialog
+            {
+                Title = "Message To Large",
+                Content = "The message exceeds the number of pixels available to encode." + Environment.NewLine +
+                          "Increase the (Bits Per Color Channel) or decrease total # of words.",
+                CloseButtonText = "Ok"
+            };
+
+            await messageToLargeDialog.ShowAsync();
         }
 
         #endregion

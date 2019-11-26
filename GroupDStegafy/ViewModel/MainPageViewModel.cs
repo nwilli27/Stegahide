@@ -213,6 +213,15 @@ namespace GroupDStegafy.ViewModel
 
         #endregion
 
+        #region Events
+
+        /// <summary>
+        ///     Occurs when the user tries to embed a message in an image where it will not fit.
+        /// </summary>
+        public event EventHandler MessageTooLarge;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -309,13 +318,16 @@ namespace GroupDStegafy.ViewModel
             {
                 this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
             }
-            else if (this.SourceBitmap.HasMessageSizeExceededNumberOfPixels(this.SecretText))
-            {
-                showMessageToLargePopup();
-            }
             else
             {
-                this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey, this.BitsPerColorChannel);
+                try
+                {
+                    this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey, this.BitsPerColorChannel);
+                }
+                catch (MessageTooLargeException)
+                {
+                    this.MessageTooLarge?.Invoke(this, EventArgs.Empty);
+                }
             }
 
             this.OnPropertyChanged(nameof(this.SourceBitmap));
@@ -363,19 +375,6 @@ namespace GroupDStegafy.ViewModel
         private bool canEncodeMessage(object obj)
         {
             return this.sourceBitmap != null && (this.secretBitmap != null || this.secretText != null);
-        }
-
-        private static async void showMessageToLargePopup()
-        {
-            var messageToLargeDialog = new ContentDialog
-            {
-                Title = "Message To Large",
-                Content = "The message exceeds the number of pixels available to encode." + Environment.NewLine +
-                          "Increase the (Bits Per Color Channel) or decrease total # of words.",
-                CloseButtonText = "Ok"
-            };
-
-            await messageToLargeDialog.ShowAsync();
         }
 
         #endregion

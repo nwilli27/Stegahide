@@ -179,18 +179,23 @@ namespace GroupDStegafy.Model.Image
 
         /// <summary>
         ///     Embeds the text message in the bitmap pixels color bytes.
-        ///     Precondition: message != null
+        ///     Precondition: message != null, message will fit in the image
         ///     Post-condition: message embedded in bitmap pixel color bytes
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="encryptionKey">The encryption key.</param>
         /// <param name="bitsPerColorChannel">The bits per color channel</param>
         /// <exception cref="ArgumentNullException">message</exception>
+        /// <exception cref="MessageTooLargeException">Message cannot fit given the bits per color channel</exception>
         public void EmbedTextMessage(string message, string encryptionKey, int bitsPerColorChannel)
         {
             if (message == null)
             {
                 throw new ArgumentNullException(nameof(message));
+            }
+            if (this.isMessageTooBig(message, bitsPerColorChannel))
+            {
+                throw new MessageTooLargeException();
             }
 
             var binaryMessage = setupTextMessage(message, encryptionKey);
@@ -239,21 +244,12 @@ namespace GroupDStegafy.Model.Image
                                                      TextDecoder.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
         }
 
-        /// <summary>
-        ///     Determines whether [has message size exceeded number of pixels] [the specified message].
-        ///     Precondition: none
-        ///     Post-condition: none
-        /// </summary>
-        /// <param name="message">The message.</param>
-        /// <returns>
-        ///   <c>true</c> if [has message size exceeded number of pixels] [the specified message]; otherwise, <c>false</c>.
-        /// </returns>
-        public bool HasMessageSizeExceededNumberOfPixels(string message)
+        private bool isMessageTooBig(string message, int bitsPerColorChannel)
         {
             const int possibleColorChannels = 3;
             const int charByteLength = 8;
-            var totalPossibleChannels = (this.Width * this.Height) * (this.HeaderPixels.BitsPerColorChannel * possibleColorChannels);
-            var numberOfMessageBits = message.Length * charByteLength / this.HeaderPixels.BitsPerColorChannel;
+            var totalPossibleChannels = (this.Width * this.Height) * (bitsPerColorChannel * possibleColorChannels);
+            var numberOfMessageBits = message.Length * charByteLength / bitsPerColorChannel;
 
             return numberOfMessageBits > totalPossibleChannels;
         }
