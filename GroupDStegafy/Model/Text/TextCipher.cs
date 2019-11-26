@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Text.RegularExpressions;
+using GroupDStegafy.Model.Extensions;
 
 namespace GroupDStegafy.Model.Text
 {
@@ -22,7 +23,6 @@ namespace GroupDStegafy.Model.Text
         private const string KeywordEnd = "#KEY#";
         private const char FirstCharacter = 'A';
         private const char LastCharacter = 'Z';
-        private const string AlphabetOnlyRegex = "[^a-zA-Z]";
 
         #endregion
 
@@ -128,8 +128,8 @@ namespace GroupDStegafy.Model.Text
 
         private static StringBuilder getStringBuilderForCipher(string cipherText)
         {
-            var keepAlphabetical = Regex.Replace(cipherText, AlphabetOnlyRegex, string.Empty);
-            return new StringBuilder(keepAlphabetical.ToUpper());
+            cipherText = cipherText.KeepOnlyAlphabetical();
+            return new StringBuilder(cipherText.ToUpper());
         }
 
         #endregion

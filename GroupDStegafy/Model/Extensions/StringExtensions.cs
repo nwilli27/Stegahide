@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace GroupDStegafy.Model.Extensions
 {
@@ -15,7 +16,8 @@ namespace GroupDStegafy.Model.Extensions
 
         private const int ByteLength = 8;
         private const int BaseForm = 2;
-        
+        public const string AlphabetOnlyRegex = "[^a-zA-Z]";
+
         #endregion
 
         /// <summary>
@@ -99,6 +101,18 @@ namespace GroupDStegafy.Model.Extensions
         {
             return stringInput.Remove(index, Math.Min(replacement.Length, stringInput.Length - index))
                       .Insert(index, replacement);
+        }
+
+        /// <summary>
+        ///     Keeps the only alphabetical letters in string.
+        ///     Precondition: none
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="stringInput">The string input.</param>
+        /// <returns>A string of only alphabetical letters</returns>
+        public static string KeepOnlyAlphabetical(this string stringInput)
+        {
+            return Regex.Replace(stringInput, AlphabetOnlyRegex, string.Empty);
         }
     }
 }

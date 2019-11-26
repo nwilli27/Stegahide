@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
 using GroupDStegafy.FileIO;
@@ -219,6 +218,8 @@ namespace GroupDStegafy.ViewModel
         ///     Occurs when the user tries to embed a message in an image where it will not fit.
         /// </summary>
         public event EventHandler MessageTooLarge;
+
+        public event EventHandler EncryptedTextWarning;
 
         #endregion
 
