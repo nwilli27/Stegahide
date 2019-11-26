@@ -55,8 +55,6 @@ namespace GroupDStegafy.ViewModel
                 this.OnPropertyChanged(nameof(this.TextEncodingVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
                 this.DecodeCommand.OnCanExecuteChanged();
-                this.SecretBitmap = null;
-                this.SecretText = null;
             }
         }
 
