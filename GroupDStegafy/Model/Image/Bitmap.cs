@@ -184,6 +184,7 @@ namespace GroupDStegafy.Model.Image
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="encryptionKey">The encryption key.</param>
+        /// <param name="bitsPerColorChannel">The bits per color channel</param>
         /// <exception cref="ArgumentNullException">message</exception>
         public void EmbedTextMessage(string message, string encryptionKey, int bitsPerColorChannel)
         {
@@ -192,7 +193,7 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var binaryMessage = this.setupTextMessage(message, encryptionKey);
+            var binaryMessage = setupTextMessage(message, encryptionKey);
             var binaryMessageBitQueue = binaryMessage.SplitInParts(bitsPerColorChannel);
 
             for (var x = 0; x < this.Width; x++)
@@ -285,7 +286,7 @@ namespace GroupDStegafy.Model.Image
             return binaryMessage;
         }
 
-        private string setupTextMessage(string message, string encryptionKey)
+        private static string setupTextMessage(string message, string encryptionKey)
         {
             message = checkToEncryptText(message, encryptionKey);
             message += TextDecoder.DecodingStopIndicator + " ";

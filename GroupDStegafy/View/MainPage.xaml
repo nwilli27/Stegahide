@@ -38,7 +38,7 @@
             </Image.RenderTransform>
         </Image>
         <Button Name="decodeButton" Content="Decode" Canvas.Left="697" Canvas.Top="234" Width="{StaticResource ButtonWidth}" Command="{Binding DecodeCommand}"/>
-        <CheckBox x:Name="showEncryptedCheckbox" Content="Show Encrypted" Canvas.Left="697" Canvas.Top="283" FontSize="10" Width="115" Visibility="{Binding ImageEncryptionVisibility}" IsChecked="{Binding ShowEncryptedSelected, Mode=TwoWay}"/>
+        <CheckBox x:Name="showEncryptedCheckbox" Content="Show Encrypted" Canvas.Left="697" Canvas.Top="283" FontSize="10" Width="115" Visibility="{Binding EncryptionVisibility}" IsChecked="{Binding ShowEncryptedSelected, Mode=TwoWay}"/>
         <Button Name="encodeButton" Content="Encode" Canvas.Left="729" Canvas.Top="333" Width="{StaticResource ButtonWidth}" Command="{Binding EncodeCommand}"/>
         <StackPanel Name="textEncodingOptions" Canvas.Left="697" Canvas.Top="386" Visibility="{Binding TextEncodingVisibility}">
             <TextBlock  TextWrapping="Wrap" Height="32" FontSize="10"><Run Text="Encryption Key"/><LineBreak/><Run Text="(blank for none)"/></TextBlock>

@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
 using GroupDStegafy.FileIO;
 using GroupDStegafy.Model.Image;
+using GroupDStegafy.Model.Text;
 
 namespace GroupDStegafy.ViewModel
 {
@@ -54,6 +55,8 @@ namespace GroupDStegafy.ViewModel
                 this.OnPropertyChanged(nameof(this.TextEncodingVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
                 this.DecodeCommand.OnCanExecuteChanged();
+                this.SecretBitmap = null;
+                this.SecretText = null;
             }
         }
 
@@ -85,6 +88,7 @@ namespace GroupDStegafy.ViewModel
                 this.secretText = value;
                 this.OnPropertyChanged(nameof(this.SecretText));
                 this.OnPropertyChanged(nameof(this.SecretTextVisibility));
+                this.OnPropertyChanged(nameof(this.EncryptionVisibility));
                 this.OnPropertyChanged(nameof(this.TextEncodingVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
             }
@@ -146,6 +150,8 @@ namespace GroupDStegafy.ViewModel
 
         public Visibility ImageEncryptionVisibility => this.sourceBitmap != null && this.secretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
 
+        public Visibility EncryptionVisibility => (this.secretBitmap != null || this.secretText != null) && this.SourceBitmap.HeaderPixels.HasEncryption ? Visibility.Visible : Visibility.Collapsed;
+
         public bool EncryptImageSelected
         {
             get => this.encryptImageSelected;
@@ -156,8 +162,9 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
-        public Visibility ShowEncryptedVisibility => this.SourceBitmap != null && this.SourceBitmap.HasSecretMessage && this.SourceBitmap.HeaderPixels.HasEncryption
+        public Visibility ShowEncryptedVisibility => this.SourceBitmap.HasSecretMessage && this.SourceBitmap.HeaderPixels.HasEncryption
                 ? Visibility.Visible : Visibility.Collapsed;
+
 
         public bool ShowEncryptedSelected
         {
@@ -251,6 +258,7 @@ namespace GroupDStegafy.ViewModel
                 if (file.Name.EndsWith(".txt"))
                 {
                     this.SecretText = await Windows.Storage.FileIO.ReadTextAsync(file);
+                    this.EncryptionKey = null;
                     this.SecretBitmap = null;
                 }
                 else
@@ -322,6 +330,16 @@ namespace GroupDStegafy.ViewModel
             if (this.SourceBitmap.IsSecretText)
             {
                 this.SecretText = this.SourceBitmap.DecodeTextMessage();
+                
+                if (this.SourceBitmap.HeaderPixels.HasEncryption)
+                {
+                    this.EncryptionKey = TextCipher.EncryptionKey;
+                }
+                if (this.ShowEncryptedSelected && this.SourceBitmap.HeaderPixels.HasEncryption)
+                {
+                    this.SecretText = TextDecoder.RemoveDecodeIndicator(TextCipher.EncryptedMessage);
+                }
+
                 this.SecretBitmap = null;
             }
             else

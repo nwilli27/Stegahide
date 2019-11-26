@@ -9,6 +9,13 @@ namespace GroupDStegafy.Model.Text
     /// </summary>
     internal class TextCipher
     {
+        #region Properties
+
+        public static string EncryptionKey { get; private set; }
+
+        public static string EncryptedMessage { get; private set; }
+
+        #endregion
 
         #region Constants
 
@@ -46,21 +53,28 @@ namespace GroupDStegafy.Model.Text
         /// <returns>The decrypted text message.</returns>
         public static string DecryptText(string encryptedText)
         {
-            var keyword = extractKeyword(encryptedText);
-            var message = extractMessage(encryptedText);
+            EncryptionKey = ExtractKeyword(encryptedText);
+            EncryptedMessage = extractMessage(encryptedText);
 
-            return decryptText(message, keyword);
+            return decryptText(EncryptedMessage, EncryptionKey);
+        }
+
+        /// <summary>
+        ///     Extracts the keyword from the encrypted text.
+        ///     Precondition: none
+        ///     Post-condition: nome
+        /// </summary>
+        /// <param name="encryptedText">The encrypted text.</param>
+        /// <returns>The keyword from the encrypted text.</returns>
+        public static string ExtractKeyword(string encryptedText)
+        {
+            var keywordEndIndex = encryptedText.IndexOf(KeywordEnd, StringComparison.Ordinal);
+            return encryptedText.Substring(0, keywordEndIndex);
         }
 
         #endregion
 
         #region Private Helpers
-
-        private static string extractKeyword(string encryptedText)
-        {
-            var keywordEndIndex = encryptedText.IndexOf(KeywordEnd, StringComparison.Ordinal);
-            return encryptedText.Substring(0, keywordEndIndex);
-        }
 
         private static string extractMessage(string encryptedText)
         {
