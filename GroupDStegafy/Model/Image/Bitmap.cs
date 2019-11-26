@@ -242,6 +242,17 @@ namespace GroupDStegafy.Model.Image
 
         #region Private Helpers
 
+        //TODO use this to show indication that the message to encode exceeds the number of available pixels
+        private bool hasMessageSizeExceededNumberOfPixels(string message)
+        {
+            const int possibleColorChannels = 3;
+            const int charByteLength = 8;
+            var totalPossibleChannels = (this.Width * this.Height) * (this.HeaderPixels.BitsPerColorChannel * possibleColorChannels);
+            var numberOfMessageBits = message.Length * charByteLength / this.HeaderPixels.BitsPerColorChannel;
+
+            return numberOfMessageBits > totalPossibleChannels;
+        }
+
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {
             var pixelColor = this.GetPixelColor(x, y);
