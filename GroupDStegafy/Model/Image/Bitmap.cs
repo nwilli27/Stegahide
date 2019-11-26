@@ -284,7 +284,6 @@ namespace GroupDStegafy.Model.Image
 
         private static string setupTextMessage(string message, string encryptionKey)
         {
-            message = message.KeepOnlyAlphabetical();
             message = checkToEncryptText(message, encryptionKey);
             message += TextDecoder.DecodingStopIndicator + " ";
             return message.ConvertToBinary();

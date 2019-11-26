@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Text.RegularExpressions;
 using GroupDStegafy.Model.Extensions;
 
 namespace GroupDStegafy.Model.Text
@@ -12,8 +11,20 @@ namespace GroupDStegafy.Model.Text
     {
         #region Properties
 
+        /// <summary>
+        /// Gets the encryption key.
+        /// </summary>
+        /// <value>
+        /// The encryption key.
+        /// </value>
         public static string EncryptionKey { get; private set; }
 
+        /// <summary>
+        /// Gets the encrypted message.
+        /// </summary>
+        /// <value>
+        /// The encrypted message.
+        /// </value>
         public static string EncryptedMessage { get; private set; }
 
         #endregion
@@ -128,7 +139,7 @@ namespace GroupDStegafy.Model.Text
 
         private static StringBuilder getStringBuilderForCipher(string cipherText)
         {
-            cipherText = cipherText.KeepOnlyAlphabetical();
+            cipherText = cipherText.ToAlphabeticalOnly();
             return new StringBuilder(cipherText.ToUpper());
         }
 

@@ -110,7 +110,7 @@ namespace GroupDStegafy.Model.Extensions
         /// </summary>
         /// <param name="stringInput">The string input.</param>
         /// <returns>A string of only alphabetical letters</returns>
-        public static string KeepOnlyAlphabetical(this string stringInput)
+        public static string ToAlphabeticalOnly(this string stringInput)
         {
             return Regex.Replace(stringInput, AlphabetOnlyRegex, string.Empty);
         }

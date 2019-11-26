@@ -7,6 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
 using GroupDStegafy.FileIO;
+using GroupDStegafy.Model.Extensions;
 using GroupDStegafy.Model.Image;
 using GroupDStegafy.Model.Text;
 
@@ -82,7 +83,7 @@ namespace GroupDStegafy.ViewModel
             get => this.secretText;
             set
             {
-                this.secretText = value;
+                this.secretText = value.ToAlphabeticalOnly();
                 this.OnPropertyChanged(nameof(this.SecretText));
                 this.OnPropertyChanged(nameof(this.SecretTextVisibility));
                 this.OnPropertyChanged(nameof(this.EncryptionVisibility));
