@@ -22,7 +22,7 @@
     </Page.DataContext>
 
     <Canvas Width="1500" Height="850" Background="DimGray" Margin="0,-1,0,1">
-        <TextBlock Text="Stegahide" TextAlignment="Center" Width="1500" Height="121" FontFamily="OCR A" FontSize="100"/>
+        <TextBlock Text="Stegafy" TextAlignment="Center" Width="1500" Height="121" FontFamily="OCR A" FontSize="100"/>
         <Rectangle Width="1500" Height="7" Canvas.Left="0" Canvas.Top="119" Fill="Black"/>
         <TextBlock Text="Source Image" Canvas.Left="120" Canvas.Top="145" Width="485" FontFamily="OCR A" FontSize="23" TextAlignment="Center"/>
         <TextBlock Text="Secret Message" Canvas.Left="900" Canvas.Top="145" Width="485" FontFamily="OCR A" FontSize="23" TextAlignment="Center"/>
