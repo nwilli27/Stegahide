@@ -238,12 +238,16 @@ namespace GroupDStegafy.Model.Image
                                                      TextDecoder.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
         }
 
-        #endregion
-
-        #region Private Helpers
-
-        //TODO use this to show indication that the message to encode exceeds the number of available pixels
-        private bool hasMessageSizeExceededNumberOfPixels(string message)
+        /// <summary>
+        ///     Determines whether [has message size exceeded number of pixels] [the specified message].
+        ///     Precondition: none
+        ///     Post-condition: none
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns>
+        ///   <c>true</c> if [has message size exceeded number of pixels] [the specified message]; otherwise, <c>false</c>.
+        /// </returns>
+        public bool HasMessageSizeExceededNumberOfPixels(string message)
         {
             const int possibleColorChannels = 3;
             const int charByteLength = 8;
@@ -252,6 +256,10 @@ namespace GroupDStegafy.Model.Image
 
             return numberOfMessageBits > totalPossibleChannels;
         }
+
+        #endregion
+
+        #region Private Helpers
 
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {

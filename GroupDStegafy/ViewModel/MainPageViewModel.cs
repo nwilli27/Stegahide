@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Windows.Storage;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using GroupDStegafy.Annotations;
 using GroupDStegafy.FileIO;
@@ -301,6 +302,10 @@ namespace GroupDStegafy.ViewModel
             {
                 this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
             }
+            else if (this.SourceBitmap.HasMessageSizeExceededNumberOfPixels(this.SecretText))
+            {
+                showMessageToLargePopup();
+            }
             else
             {
                 this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey, this.BitsPerColorChannel);
@@ -341,6 +346,19 @@ namespace GroupDStegafy.ViewModel
         private bool canEncodeMessage(object obj)
         {
             return this.sourceBitmap != null && (this.secretBitmap != null || this.secretText != null);
+        }
+
+        private static async void showMessageToLargePopup()
+        {
+            var messageToLargeDialog = new ContentDialog
+            {
+                Title = "Message To Large",
+                Content = "The message exceeds the number of pixels available to encode." + Environment.NewLine +
+                          "Increase the (Bits Per Color Channel) or decrease total # of words.",
+                CloseButtonText = "Ok"
+            };
+
+            await messageToLargeDialog.ShowAsync();
         }
 
         #endregion
