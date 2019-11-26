@@ -17,6 +17,7 @@ namespace GroupDStegafy.Model.Image
         #region Data Members
 
         private readonly byte[] pixelBytes;
+        private HeaderPixels headerPixels;
 
         #endregion
 
@@ -44,7 +45,7 @@ namespace GroupDStegafy.Model.Image
         /// <value>
         ///   <c>true</c> if this instance has secret message; otherwise, <c>false</c>.
         /// </value>
-        public bool HasSecretMessage => this.HeaderPixels.HasSecretMessage;
+        public bool HasSecretMessage => this.headerPixels.HasSecretMessage;
 
         /// <summary>
         /// Gets a value indicating whether this instance is secret text.
@@ -52,15 +53,23 @@ namespace GroupDStegafy.Model.Image
         /// <value>
         ///   <c>true</c> if this instance is secret text; otherwise, <c>false</c>.
         /// </value>
-        public bool IsSecretText => this.HeaderPixels.IsSecretText;
+        public bool IsSecretText => this.headerPixels.IsSecretText;
 
         /// <summary>
-        /// Gets or sets the header pixels.
+        /// Gets a value indicating whether this instance has encryption.
         /// </summary>
         /// <value>
-        /// The header pixels.
+        ///   <c>true</c> if this instance has encryption; otherwise, <c>false</c>.
         /// </value>
-        public HeaderPixels HeaderPixels { get; private set; }
+        public bool HasEncryption => this.headerPixels.HasEncryption;
+
+        /// <summary>
+        /// Gets the bits per color channel.
+        /// </summary>
+        /// <value>
+        /// The bits per color channel.
+        /// </value>
+        public int BitsPerColorChannel => this.headerPixels.BitsPerColorChannel;
 
         #endregion
 
@@ -169,11 +178,7 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            if (encrypt)
-            {
-                this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
-            }
-
+            this.checkToGetEncryptedBitmap(encrypt);
             this.setUpHeaderForSecretImage(encrypt);
         }
 
@@ -240,8 +245,20 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            return this.HeaderPixels.HasEncryption ? TextCipher.DecryptText(binaryMessage.ConvertBinaryToString()) : 
+            return this.headerPixels.HasEncryption ? TextCipher.DecryptText(binaryMessage.ConvertBinaryToString()) : 
                                                      TextDecoder.RemoveDecodeIndicator(binaryMessage.ConvertBinaryToString());
+        }
+
+        #endregion
+
+        #region Private Helpers
+
+        private void checkToGetEncryptedBitmap(bool encrypt)
+        {
+            if (encrypt)
+            {
+                this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
+            }
         }
 
         private bool isMessageTooBig(string message, int bitsPerColorChannel)
@@ -253,10 +270,6 @@ namespace GroupDStegafy.Model.Image
 
             return numberOfMessageBits > totalPossibleChannels;
         }
-
-        #endregion
-
-        #region Private Helpers
 
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {
@@ -276,7 +289,7 @@ namespace GroupDStegafy.Model.Image
 
             if (!isHeaderPixel(x, y))
             {
-                binaryMessage += TextDecoder.ExtractMessageBits(pixelColor, this.HeaderPixels.BitsPerColorChannel);
+                binaryMessage += TextDecoder.ExtractMessageBits(pixelColor, this.headerPixels.BitsPerColorChannel);
             }
 
             return binaryMessage;
@@ -297,26 +310,26 @@ namespace GroupDStegafy.Model.Image
 
         private void setUpHeaderForSecretTextMessage(bool hasEncryption, int bitsPerColorChannel)
         {
-            this.HeaderPixels.HasSecretMessage = true;
-            this.HeaderPixels.IsSecretText = true;
-            this.HeaderPixels.HasEncryption = hasEncryption;
-            this.HeaderPixels.BitsPerColorChannel = bitsPerColorChannel;
+            this.headerPixels.HasSecretMessage = true;
+            this.headerPixels.IsSecretText = true;
+            this.headerPixels.HasEncryption = hasEncryption;
+            this.headerPixels.BitsPerColorChannel = bitsPerColorChannel;
             this.setHeaderPixels();
         }
 
         private void setUpHeaderForSecretImage(bool hasEncryption)
         {
-            this.HeaderPixels.HasSecretMessage = true;
-            this.HeaderPixels.HasEncryption = hasEncryption;
-            this.HeaderPixels.IsSecretText = false;
+            this.headerPixels.HasSecretMessage = true;
+            this.headerPixels.HasEncryption = hasEncryption;
+            this.headerPixels.IsSecretText = false;
 
             this.setHeaderPixels();
         }
 
         private void setHeaderPixels()
         {
-            this.SetPixelColor(0, 0, this.HeaderPixels.FirstPixelColor);
-            this.SetPixelColor(0, 1, this.HeaderPixels.SecondPixelColor);
+            this.SetPixelColor(0, 0, this.headerPixels.FirstPixelColor);
+            this.SetPixelColor(0, 1, this.headerPixels.SecondPixelColor);
         }
 
         private void createHeaderPixels()
@@ -324,7 +337,7 @@ namespace GroupDStegafy.Model.Image
             var pixelOne = this.GetPixelColor(0, 0);
             var pixelTwo = this.GetPixelColor(0, 1);
 
-            this.HeaderPixels = new HeaderPixels(pixelOne, pixelTwo);
+            this.headerPixels = new HeaderPixels(pixelOne, pixelTwo);
         }
 
         private static bool isHeaderPixel(int x, int y)

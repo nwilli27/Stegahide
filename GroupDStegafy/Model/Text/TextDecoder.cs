@@ -12,6 +12,7 @@ namespace GroupDStegafy.Model.Text
 
         #region Constants
 
+        //TODO move this to byte extensions, used to much
         private const int ByteLength = 8;
 
         public const string DecodingStopIndicator = "#.-.-.-#";

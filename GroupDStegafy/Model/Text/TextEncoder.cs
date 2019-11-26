@@ -39,8 +39,8 @@ namespace GroupDStegafy.Model.Text
                 return colorChannel;
             }
 
-            var byteToMask = binaryMessageBitQueue.Dequeue();
-            return colorChannel.MaskByteWithBitSequence(byteToMask);
+            var bitSequence = binaryMessageBitQueue.Dequeue();
+            return colorChannel.MaskByteWithBitSequence(bitSequence);
         }
 
         #endregion
