@@ -13,8 +13,9 @@ namespace GroupDStegafy.FileIO
     {
         /// <summary>
         ///     Saves the bitmap to the specified file.
-        ///     Precondition: Save file and bitmap are not null
-        ///     Postcondition: Bitmap is saved to disk
+        ///     Precondition: saveFile != null
+        ///                   bitmap != null
+        ///     Post-condition: Bitmap is saved to disk
         /// </summary>
         /// <param name="saveFile">The save file.</param>
         /// <param name="bitmap">The modified image.</param>
@@ -28,6 +29,7 @@ namespace GroupDStegafy.FileIO
             {
                 throw new ArgumentNullException(nameof(saveFile));
             }
+
             var modifiedImage = await bitmap.AsWritableBitmapAsync();
             var stream = await saveFile.OpenAsync(FileAccessMode.ReadWrite);
             var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);

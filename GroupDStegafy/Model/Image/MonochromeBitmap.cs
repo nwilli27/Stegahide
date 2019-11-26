@@ -16,6 +16,16 @@ namespace GroupDStegafy.Model.Image
 
         #region Constructors
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="MonochromeBitmap"/> class.
+        ///     Precondition: pixels != null
+        ///     Post-condition: this.Width = width
+        ///                     this.Height = height
+        /// </summary>
+        /// <param name="pixels">The pixels.</param>
+        /// <param name="width">The width.</param>
+        /// <param name="height">The height.</param>
+        /// <exception cref="ArgumentNullException">pixels</exception>
         private MonochromeBitmap(bool[] pixels, uint width, uint height)
         {
             this.pixels = pixels ?? throw new ArgumentNullException(nameof(pixels));
@@ -120,6 +130,7 @@ namespace GroupDStegafy.Model.Image
         ///     Precondition: None
         ///     Post-condition: None
         /// </summary>
+        /// <returns>The flipped version of the bitmap.</returns>
         public MonochromeBitmap GetFlipped()
         {
             var halfHeight = this.Height / 2;

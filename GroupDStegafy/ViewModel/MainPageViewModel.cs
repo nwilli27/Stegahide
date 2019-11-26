@@ -24,14 +24,14 @@ namespace GroupDStegafy.ViewModel
         private Bitmap sourceBitmap;
         private MonochromeBitmap secretBitmap;
         private string secretText;
+        private string encryptionKey;
+        private int bitsPerColorChannel;
 
         private bool canSaveSource;
         private bool canSaveSecret;
         private bool encryptImageSelected;
         private bool showEncryptedSelected;
-        private string encryptionKey;
-        private int bitsPerColorChannel;
-        
+
         #endregion
 
         #region Properties
@@ -78,6 +78,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
+        /// <summary>
+        /// Gets or sets the secret text.
+        /// </summary>
+        /// <value>
+        /// The secret text.
+        /// </value>
         public string SecretText
         {
             get => this.secretText;
@@ -89,6 +95,38 @@ namespace GroupDStegafy.ViewModel
                 this.OnPropertyChanged(nameof(this.EncryptionVisibility));
                 this.OnPropertyChanged(nameof(this.TextEncodingVisibility));
                 this.EncodeCommand.OnCanExecuteChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the encryption key.
+        /// </summary>
+        /// <value>
+        /// The encryption key.
+        /// </value>
+        public string EncryptionKey
+        {
+            get => this.encryptionKey;
+            set
+            {
+                this.encryptionKey = value;
+                this.OnPropertyChanged(nameof(this.EncryptionKey));
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the bits per color channel.
+        /// </summary>
+        /// <value>
+        /// The bits per color channel.
+        /// </value>
+        public int BitsPerColorChannel
+        {
+            get => this.bitsPerColorChannel;
+            set
+            {
+                this.bitsPerColorChannel = value;
+                this.OnPropertyChanged(nameof(this.BitsPerColorChannel));
             }
         }
 
@@ -108,9 +146,79 @@ namespace GroupDStegafy.ViewModel
         /// </value>
         public WriteableBitmap SecretWriteableBitmap => this.secretBitmap?.ToBitmap().AsWritableBitmapAsync().Result;
 
+        /// <summary>
+        ///     Gets the encode command.
+        /// </summary>
+        /// <value>
+        ///     The encode command.
+        /// </value>
+        public RelayCommand EncodeCommand { get; }
+
+        /// <summary>
+        ///     Gets the decode command.
+        /// </summary>
+        /// <value>
+        ///     The decode command.
+        /// </value>
+        public RelayCommand DecodeCommand { get; }
+
+        #endregion
+
+        #region Visibility Properties
+
+        /// <summary>
+        /// Gets the secret bitmap visibility.
+        /// </summary>
+        /// <value>
+        /// The secret bitmap visibility.
+        /// </value>
         public Visibility SecretBitmapVisibility => this.SecretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
 
+        /// <summary>
+        /// Gets the secret text visibility.
+        /// </summary>
+        /// <value>
+        /// The secret text visibility.
+        /// </value>
         public Visibility SecretTextVisibility => this.SecretText != null ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the text encoding visibility.
+        /// </summary>
+        /// <value>
+        /// The text encoding visibility.
+        /// </value>
+        public Visibility TextEncodingVisibility => this.SourceBitmap != null && this.SecretText != null ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the image encryption visibility.
+        /// </summary>
+        /// <value>
+        /// The image encryption visibility.
+        /// </value>
+        public Visibility ImageEncryptionVisibility => this.sourceBitmap != null && this.secretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the encryption visibility.
+        /// </summary>
+        /// <value>
+        /// The encryption visibility.
+        /// </value>
+        public Visibility EncryptionVisibility => (this.secretBitmap != null || this.secretText != null) && this.SourceBitmap != null && this.SourceBitmap.HasEncryption
+            ? Visibility.Visible : Visibility.Collapsed;
+
+        /// <summary>
+        /// Gets the show encrypted checkbox visibility.
+        /// </summary>
+        /// <value>
+        /// The show encrypted visibility.
+        /// </value>
+        public Visibility ShowEncryptedVisibility => this.SourceBitmap.HasSecretMessage && this.SourceBitmap.HasEncryption
+            ? Visibility.Visible : Visibility.Collapsed;
+
+        #endregion
+
+        #region Boolean Properties
 
         /// <summary>
         ///     Gets a value indicating whether the source image can be saved.
@@ -144,13 +252,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
-        public Visibility TextEncodingVisibility => this.SourceBitmap != null && this.SecretText != null ? Visibility.Visible : Visibility.Collapsed;
-
-        public Visibility ImageEncryptionVisibility => this.sourceBitmap != null && this.secretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
-
-        public Visibility EncryptionVisibility => (this.secretBitmap != null || this.secretText != null) && this.SourceBitmap != null && this.SourceBitmap.HasEncryption
-                        ? Visibility.Visible : Visibility.Collapsed;
-
+        /// <summary>
+        /// Gets or sets a value indicating whether [encrypt image selected].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [encrypt image selected]; otherwise, <c>false</c>.
+        /// </value>
         public bool EncryptImageSelected
         {
             get => this.encryptImageSelected;
@@ -161,10 +268,12 @@ namespace GroupDStegafy.ViewModel
             }
         }
 
-        public Visibility ShowEncryptedVisibility => this.SourceBitmap.HasSecretMessage && this.SourceBitmap.HasEncryption
-                ? Visibility.Visible : Visibility.Collapsed;
-
-
+        /// <summary>
+        /// Gets or sets a value indicating whether [show encrypted selected].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [show encrypted selected]; otherwise, <c>false</c>.
+        /// </value>
         public bool ShowEncryptedSelected
         {
             get => this.showEncryptedSelected;
@@ -174,42 +283,6 @@ namespace GroupDStegafy.ViewModel
                 this.OnPropertyChanged(nameof(this.ShowEncryptedSelected));
             }
         }
-
-        public string EncryptionKey
-        {
-            get => this.encryptionKey;
-            set
-            {
-                this.encryptionKey = value;
-                this.OnPropertyChanged(nameof(this.EncryptionKey));
-            }
-        }
-
-        public int BitsPerColorChannel
-        {
-            get => this.bitsPerColorChannel;
-            set
-            {
-                this.bitsPerColorChannel = value;
-                this.OnPropertyChanged(nameof(this.BitsPerColorChannel));
-            }
-        }
-
-        /// <summary>
-        ///     Gets the encode command.
-        /// </summary>
-        /// <value>
-        ///     The encode command.
-        /// </value>
-        public RelayCommand EncodeCommand { get; }
-
-        /// <summary>
-        ///     Gets the decode command.
-        /// </summary>
-        /// <value>
-        ///     The decode command.
-        /// </value>
-        public RelayCommand DecodeCommand { get; }
 
         #endregion
 

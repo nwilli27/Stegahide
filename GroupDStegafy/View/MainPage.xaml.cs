@@ -12,7 +12,7 @@ namespace GroupDStegafy.View
     /// <summary>
     ///     Main page of the Stegafy application.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage
     {
         #region Constructors
 
@@ -22,7 +22,7 @@ namespace GroupDStegafy.View
         public MainPage()
         {
             this.InitializeComponent();
-            ((MainPageViewModel) DataContext).MessageTooLarge += this.showMessageToLargePopup;
+            ((MainPageViewModel) DataContext).MessageTooLarge += showMessageToLargePopup;
         }
 
         #endregion
@@ -60,14 +60,14 @@ namespace GroupDStegafy.View
 
         private async void saveSourceButton_Click(object sender, RoutedEventArgs e)
         {
-            var file = await this.promptSaveImage();
+            var file = await promptSaveImage();
             ((MainPageViewModel) DataContext).HandleSaveSource(file);
         }
 
         private async void saveSecretButton_Click(object sender, RoutedEventArgs e)
         {
             // TODO handle saving text
-            var file = await this.promptSaveImage();
+            var file = await promptSaveImage();
             ((MainPageViewModel)DataContext).HandleSaveSecret(file);
         }
 
@@ -75,7 +75,7 @@ namespace GroupDStegafy.View
 
         #region Private Helpers
 
-        private async Task<StorageFile> promptSaveImage()
+        private static async Task<StorageFile> promptSaveImage()
         {
             var fileSavePicker = new FileSavePicker
             {
@@ -87,7 +87,7 @@ namespace GroupDStegafy.View
             return file;
         }
 
-        private async void showMessageToLargePopup(object sender, object e)
+        private static async void showMessageToLargePopup(object sender, object e)
         {
             var messageToLargeDialog = new ContentDialog
             {

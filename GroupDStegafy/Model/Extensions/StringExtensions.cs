@@ -14,8 +14,6 @@ namespace GroupDStegafy.Model.Extensions
 
         #region Constants
 
-        private const int ByteLength = 8;
-        private const int BaseForm = 2;
         public const string AlphabetOnlyRegex = "[^a-zA-Z]";
 
         #endregion
@@ -30,14 +28,14 @@ namespace GroupDStegafy.Model.Extensions
         /// <returns>A string composed of ASCII characters converted from a byte.</returns>
         public static string ConvertBinaryToString(this string binaryString)
         {
-            var numberOfBytes = binaryString.Length / ByteLength;
+            var numberOfBytes = binaryString.Length / ByteExtensions.ByteLength;
             var charList = new byte[numberOfBytes];
 
             for (var i = 0; i < numberOfBytes; i++)
             {
-                var asciiCharacter = binaryString.Substring(i * ByteLength, ByteLength);
+                var asciiCharacter = binaryString.Substring(i * ByteExtensions.ByteLength, ByteExtensions.ByteLength);
                 Console.WriteLine(asciiCharacter);
-                charList[i] = Convert.ToByte(asciiCharacter, BaseForm);
+                charList[i] = Convert.ToByte(asciiCharacter, ByteExtensions.BaseFormTwo);
             }
 
             return Encoding.ASCII.GetString(charList);

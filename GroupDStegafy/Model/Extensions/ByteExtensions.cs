@@ -9,9 +9,10 @@ namespace GroupDStegafy.Model.Extensions
     {
         #region Constants
 
-        private const int BaseForm = 2;
-        private const int ByteLength = 8;
         private const char ZeroBit = '0';
+
+        public const int BaseFormTwo = 2;
+        public const int ByteLength = 8;
 
         #endregion
 
@@ -86,7 +87,7 @@ namespace GroupDStegafy.Model.Extensions
 
             for (var i = 0; i < numberOfBits; i++)
             {
-                newByteValue += Math.Pow(BaseForm, i);
+                newByteValue += Math.Pow(BaseFormTwo, i);
             }
 
             return Convert.ToByte(newByteValue);
@@ -105,7 +106,7 @@ namespace GroupDStegafy.Model.Extensions
             var inputAsString = byteInput.ConvertToBaseFormTwo();
             var sequenceAdded = inputAsString.ReplaceAt(inputAsString.Length - bitSequence.Length, bitSequence);
 
-            return Convert.ToByte(sequenceAdded, BaseForm);
+            return Convert.ToByte(sequenceAdded, BaseFormTwo);
         }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace GroupDStegafy.Model.Extensions
         /// <returns>A string (binary) in the base 2 form.</returns>
         public static string ConvertToBaseFormTwo(this byte byteInput)
         {
-            return Convert.ToString(byteInput, BaseForm).PadLeft(ByteLength, ZeroBit);
+            return Convert.ToString(byteInput, BaseFormTwo).PadLeft(ByteLength, ZeroBit);
         }
 
         #endregion

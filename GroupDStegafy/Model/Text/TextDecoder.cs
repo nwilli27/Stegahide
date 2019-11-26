@@ -12,9 +12,6 @@ namespace GroupDStegafy.Model.Text
 
         #region Constants
 
-        //TODO move this to byte extensions, used to much
-        private const int ByteLength = 8;
-
         public const string DecodingStopIndicator = "#.-.-.-#";
 
         #endregion
@@ -80,7 +77,7 @@ namespace GroupDStegafy.Model.Text
         private static string getMessageBitsFromChannel(byte colorChannel, int bitsPerColorChannel)
         {
             var byteConversion = colorChannel.ConvertToBaseFormTwo();
-            return byteConversion.Substring(ByteLength - bitsPerColorChannel, bitsPerColorChannel);
+            return byteConversion.Substring(ByteExtensions.ByteLength - bitsPerColorChannel, bitsPerColorChannel);
         }
 
         #endregion

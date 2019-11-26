@@ -17,8 +17,8 @@ namespace GroupDStegafy.FileIO
         /// <summary>
         ///     Reads in an source image, makes a copy and transforms it   
         ///     to a writable image and returns a Bitmap object.
-        ///     Precondition: Source image file is not null
-        ///     Postcondition: None
+        ///     Precondition: sourceImageFile != null
+        ///     Post-condition: None
         /// </summary>
         /// <returns>
         ///     A Bitmap object with now a writable bitmap image

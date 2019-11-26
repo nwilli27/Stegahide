@@ -251,7 +251,7 @@ namespace GroupDStegafy.Model.Image
 
         #endregion
 
-        #region Private Helpers
+        #region Private Helpers - Checks
 
         private void checkToGetEncryptedBitmap(bool encrypt)
         {
@@ -270,6 +270,21 @@ namespace GroupDStegafy.Model.Image
 
             return numberOfMessageBits > totalPossibleChannels;
         }
+
+        private static string checkToEncryptText(string message, string encryptionKey)
+        {
+            return !string.IsNullOrEmpty(encryptionKey) ?
+                TextCipher.EncryptTextWithKey(message, encryptionKey) : message;
+        }
+
+        private static bool isHeaderPixel(int x, int y)
+        {
+            return (x == 0 && y == 0) || (x == 0 && y == 1);
+        }
+
+        #endregion
+
+        #region Private Helpers - Action
 
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {
@@ -295,17 +310,15 @@ namespace GroupDStegafy.Model.Image
             return binaryMessage;
         }
 
+        #endregion
+
+        #region Private Helpers - Setup
+
         private static string setupTextMessage(string message, string encryptionKey)
         {
             message = checkToEncryptText(message, encryptionKey);
             message += TextDecoder.DecodingStopIndicator + " ";
             return message.ConvertToBinary();
-        }
-
-        private static string checkToEncryptText(string message, string encryptionKey)
-        {
-            return !string.IsNullOrEmpty(encryptionKey) ? 
-                TextCipher.EncryptTextWithKey(message, encryptionKey) : message;
         }
 
         private void setUpHeaderForSecretTextMessage(bool hasEncryption, int bitsPerColorChannel)
@@ -340,11 +353,7 @@ namespace GroupDStegafy.Model.Image
             this.headerPixels = new HeaderPixels(pixelOne, pixelTwo);
         }
 
-        private static bool isHeaderPixel(int x, int y)
-        {
-            return (x == 0 && y == 0) || (x == 0 && y == 1);
-        }
-
         #endregion
+
     }
 }
