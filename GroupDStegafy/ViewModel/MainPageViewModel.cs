@@ -330,7 +330,7 @@ namespace GroupDStegafy.ViewModel
                 }
             }
 
-            this.OnPropertyChanged(nameof(this.SourceBitmap));
+            this.OnPropertyChanged(nameof(this.SourceWriteableBitmap));
             this.EncodeCommand.OnCanExecuteChanged();
             this.DecodeCommand.OnCanExecuteChanged();
             this.CanSaveSource = true;
