@@ -7,12 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewModel="using:GroupDStegafy.ViewModel"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Height="850" BorderThickness="0" Foreground="White">
 
     <Page.Resources>
         <ResourceDictionary>
             <x:Double x:Key="BoxSize">640</x:Double>
             <x:Double x:Key="ButtonWidth">75</x:Double>
+            <SolidColorBrush x:Key="ButtonColor" Color="White" />
         </ResourceDictionary>
     </Page.Resources>
 
@@ -20,32 +21,39 @@
         <viewModel:MainPageViewModel/>
     </Page.DataContext>
 
-    <Canvas Width="1500" Height="850">
-        <TextBlock Text="Stegafy" TextAlignment="Center" Width="1500" Height="120" Canvas.Top="10" FontSize="72"/>
-        <TextBlock Text="Source Image" Canvas.Left="128" Canvas.Top="150" Width="485" TextAlignment="Center"/>
-        <TextBlock Text="Secret Message" Canvas.Left="887" Canvas.Top="150" Width="485" TextAlignment="Center"/>
+    <Canvas Width="1500" Height="850" Background="DimGray" Margin="0,-1,0,1">
+        <TextBlock Text="Stegahide" TextAlignment="Center" Width="1500" Height="121" FontFamily="OCR A" FontSize="100"/>
+        <Rectangle Width="1500" Height="7" Canvas.Left="0" Canvas.Top="119" Fill="Black"/>
+        <TextBlock Text="Source Image" Canvas.Left="120" Canvas.Top="145" Width="485" FontFamily="OCR A" FontSize="23" TextAlignment="Center"/>
+        <TextBlock Text="Secret Message" Canvas.Left="900" Canvas.Top="145" Width="485" FontFamily="OCR A" FontSize="23" TextAlignment="Center"/>
+        <Rectangle Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="48" Canvas.Top="190" Fill="Black"/>
         <Image Name="sourceImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="48" Canvas.Top="190" Source="{Binding Path=SourceWriteableBitmap}"/>
+        <Rectangle Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="190" Fill="Black"/>
         <Image Name="secretImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="190" Visibility="{Binding SecretBitmapVisibility}" Source="{Binding Path=SecretWriteableBitmap}" Canvas.ZIndex="1"/>
-        <TextBlock Name="secretText" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="190" Visibility="{Binding SecretTextVisibility}" Text="{Binding SecretText}"/>
-        <Button Name="loadSourceButton" Content="Load" Canvas.Left="48" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="loadSourceButton_Click"/>
-        <Button Name="saveSourceButton" Content="Save" IsEnabled="{Binding Path=CanSaveSource}" Canvas.Left="613" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="saveSourceButton_Click"/>
-        <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="loadSecretButton_Click"/>
-        <Button Name="saveSecretButton" Content="Save" IsEnabled="{Binding Path=CanSaveSecret}" Canvas.Left="1377" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="saveSecretButton_Click"/>
-        <Image Source="/Assets/Arrow.png" Canvas.Left="772" Canvas.Top="218"/>
-        <Image Source="/Assets/Arrow.png" Canvas.Left="697" Canvas.Top="317" RenderTransformOrigin="0.5,0.5">
+        <TextBlock Name="secretText" Width="627" Height="627" Canvas.Left="819" Canvas.Top="197" Visibility="{Binding SecretTextVisibility}" Text="{Binding SecretText}"/>
+        <Button Name="loadSourceButton" Content="Load" Canvas.Left="48" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Foreground="{StaticResource ButtonColor}" Click="loadSourceButton_Click"/>
+        <Button Name="saveSourceButton" Content="Save" IsEnabled="{Binding Path=CanSaveSource}" Canvas.Left="613" Canvas.Top="143" Foreground="{StaticResource ButtonColor}" Width="{StaticResource ButtonWidth}" Click="saveSourceButton_Click"/>
+        <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Foreground="{StaticResource ButtonColor}" Click="loadSecretButton_Click"/>
+        <Button Name="saveSecretButton" Content="Save" IsEnabled="{Binding Path=CanSaveSecret}" Canvas.Left="1377" Canvas.Top="143" Foreground="{StaticResource ButtonColor}" Width="{StaticResource ButtonWidth}" Click="saveSecretButton_Click"/>
+        <Image Source="/Assets/Arrow.png" Canvas.Left="772" Canvas.Top="294"/>
+        <Image Source="/Assets/Arrow.png" Canvas.Left="697" Canvas.Top="647" RenderTransformOrigin="0.5,0.5">
             <Image.RenderTransform>
                 <CompositeTransform ScaleX="-1"/>
             </Image.RenderTransform>
         </Image>
-        <Button Name="decodeButton" Content="Decode" Canvas.Left="697" Canvas.Top="234" Width="{StaticResource ButtonWidth}" Command="{Binding DecodeCommand}"/>
-        <CheckBox x:Name="showEncryptedCheckbox" Content="Show Encrypted" Canvas.Left="697" Canvas.Top="283" FontSize="10" Width="115" Visibility="{Binding EncryptionVisibility}" IsChecked="{Binding ShowEncryptedSelected, Mode=TwoWay}"/>
-        <Button Name="encodeButton" Content="Encode" Canvas.Left="729" Canvas.Top="333" Width="{StaticResource ButtonWidth}" Command="{Binding EncodeCommand}"/>
-        <StackPanel Name="textEncodingOptions" Canvas.Left="697" Canvas.Top="386" Visibility="{Binding TextEncodingVisibility}">
+        <Button Name="decodeButton" Content="Decode" Canvas.Left="697" Canvas.Top="310" Width="{StaticResource ButtonWidth}" Foreground="{StaticResource ButtonColor}" Command="{Binding DecodeCommand}"/>
+        <CheckBox x:Name="showEncryptedCheckbox" Content="Show Encrypted" Canvas.Left="697" Canvas.Top="418" FontSize="10" Width="115" Foreground="White" Visibility="{Binding EncryptionVisibility}" IsChecked="{Binding ShowEncryptedSelected, Mode=TwoWay}"/>
+        <Button Name="encodeButton" Content="Encode" Canvas.Left="729" Canvas.Top="663" Width="{StaticResource ButtonWidth}" Foreground="{StaticResource ButtonColor}" Command="{Binding EncodeCommand}"/>
+        <TextBlock Width="123" Height="49" Foreground="White" FontSize="14" Canvas.Left="693" Canvas.Top="381" Text="Decoding Options"/>
+        <Rectangle Width="114" Height="3" Canvas.Left="692" Canvas.Top="405" Fill="White"/>
+        <StackPanel Name="textEncodingOptions" Canvas.Left="697" Canvas.Top="519" Visibility="{Binding TextEncodingVisibility}" Height="216">
             <TextBlock  TextWrapping="Wrap" Height="32" FontSize="10"><Run Text="Encryption Key"/><LineBreak/><Run Text="(blank for none)"/></TextBlock>
             <TextBox x:Name="encryptionKeyTextBox" Text="{Binding EncryptionKey, Mode=TwoWay}" TextWrapping="Wrap" Width="107"/>
             <TextBlock TextWrapping="Wrap" Height="19" FontSize="10" Text="Bits used per color"/>
             <Slider x:Name="bitsPerColorSlider" Width="107" Maximum="8" Minimum="1" Value="{Binding BitsPerColorChannel, Mode=TwoWay}" SmallChange="1" LargeChange="1"/>
         </StackPanel>
-        <CheckBox Name="encryptImageCheckbox" Canvas.Left="697" Canvas.Top="386" Content="Encrypt Image" FontSize="10" Width="107" Visibility="{Binding ImageEncryptionVisibility}" IsChecked="{Binding EncryptImageSelected, Mode=TwoWay}"/>
+        <CheckBox Name="encryptImageCheckbox" Canvas.Left="697" Canvas.Top="515" Content="Encrypt Image" FontSize="10" Width="107" Visibility="{Binding ImageEncryptionVisibility}" IsChecked="{Binding EncryptImageSelected, Mode=TwoWay}"/>
+        <TextBlock Width="123" Height="49" Foreground="White" FontSize="14" Canvas.Left="693" Canvas.Top="471" Text="Encoding Options"/>
+        <Rectangle Width="114" Height="3" Canvas.Left="692" Canvas.Top="495" Fill="White"/>
     </Canvas>
 </Page>

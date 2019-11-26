@@ -83,7 +83,7 @@ namespace GroupDStegafy.ViewModel
             get => this.secretText;
             set
             {
-                this.secretText = value.ToAlphabeticalOnly();
+                this.secretText = string.IsNullOrEmpty(value) ? value : value.ToAlphabeticalOnly();
                 this.OnPropertyChanged(nameof(this.SecretText));
                 this.OnPropertyChanged(nameof(this.SecretTextVisibility));
                 this.OnPropertyChanged(nameof(this.EncryptionVisibility));
