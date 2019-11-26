@@ -26,7 +26,7 @@
         <TextBlock Text="Secret Message" Canvas.Left="887" Canvas.Top="150" Width="485" TextAlignment="Center"/>
         <Image Name="sourceImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="48" Canvas.Top="190" Source="{Binding Path=SourceWriteableBitmap}"/>
         <Image Name="secretImage" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="190" Visibility="{Binding SecretBitmapVisibility}" Source="{Binding Path=SecretWriteableBitmap}" Canvas.ZIndex="1"/>
-        <TextBox Name="secretText" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="190" Visibility="{Binding SecretTextVisibility}" Text="{Binding SecretText}" IsReadOnly="True"/>
+        <TextBlock Name="secretText" Width="{StaticResource BoxSize}" Height="{StaticResource BoxSize}" Canvas.Left="812" Canvas.Top="190" Visibility="{Binding SecretTextVisibility}" Text="{Binding SecretText}"/>
         <Button Name="loadSourceButton" Content="Load" Canvas.Left="48" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="loadSourceButton_Click"/>
         <Button Name="saveSourceButton" Content="Save" IsEnabled="{Binding Path=CanSaveSource}" Canvas.Left="613" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="saveSourceButton_Click"/>
         <Button Name="loadSecretButton" Content="Load" Canvas.Left="812" Canvas.Top="143" Width="{StaticResource ButtonWidth}" Click="loadSecretButton_Click"/>
