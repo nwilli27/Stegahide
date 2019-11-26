@@ -150,7 +150,8 @@ namespace GroupDStegafy.ViewModel
 
         public Visibility ImageEncryptionVisibility => this.sourceBitmap != null && this.secretBitmap != null ? Visibility.Visible : Visibility.Collapsed;
 
-        public Visibility EncryptionVisibility => (this.secretBitmap != null || this.secretText != null) && this.SourceBitmap.HeaderPixels.HasEncryption ? Visibility.Visible : Visibility.Collapsed;
+        public Visibility EncryptionVisibility => (this.secretBitmap != null || this.secretText != null) && this.SourceBitmap != null && this.SourceBitmap.HeaderPixels.HasEncryption
+                        ? Visibility.Visible : Visibility.Collapsed;
 
         public bool EncryptImageSelected
         {
