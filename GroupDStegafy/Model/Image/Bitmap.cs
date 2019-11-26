@@ -185,7 +185,7 @@ namespace GroupDStegafy.Model.Image
         /// <param name="message">The message.</param>
         /// <param name="encryptionKey">The encryption key.</param>
         /// <exception cref="ArgumentNullException">message</exception>
-        public void EmbedTextMessage(string message, string encryptionKey)
+        public void EmbedTextMessage(string message, string encryptionKey, int bitsPerColorChannel)
         {
             if (message == null)
             {
@@ -193,7 +193,7 @@ namespace GroupDStegafy.Model.Image
             }
 
             var binaryMessage = this.setupTextMessage(message, encryptionKey);
-            var binaryMessageBitQueue = binaryMessage.SplitInParts(this.HeaderPixels.BitsPerColorChannel);
+            var binaryMessageBitQueue = binaryMessage.SplitInParts(bitsPerColorChannel);
 
             for (var x = 0; x < this.Width; x++)
             {
@@ -208,7 +208,7 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            this.setUpHeaderForSecretTextMessage();
+            this.setUpHeaderForSecretTextMessage(encryptionKey.Length != 0, bitsPerColorChannel);
         }
 
         /// <summary>
@@ -296,10 +296,12 @@ namespace GroupDStegafy.Model.Image
             return message;
         }
 
-        private void setUpHeaderForSecretTextMessage()
+        private void setUpHeaderForSecretTextMessage(bool hasEncryption, int bitsPerColorChannel)
         {
             this.HeaderPixels.HasSecretMessage = true;
             this.HeaderPixels.IsSecretText = true;
+            this.HeaderPixels.HasEncryption = hasEncryption;
+            this.HeaderPixels.BitsPerColorChannel = bitsPerColorChannel;
             this.setHeaderPixels();
         }
 
