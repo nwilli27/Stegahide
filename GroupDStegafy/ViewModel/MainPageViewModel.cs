@@ -382,12 +382,18 @@ namespace GroupDStegafy.ViewModel
         ///     Post-condition: The secret is saved to disk.
         /// </summary>
         /// <param name="file">The file.</param>
-        public void HandleSaveSecret(StorageFile file)
+        public async void HandleSaveSecret(StorageFile file)
         {
             if (file != null)
             {
-                // TODO handle saving text
-                BitmapWriter.WriteBitmap(file, this.SecretBitmap.ToBitmap());
+                if (this.SecretBitmap == null)
+                {
+                    await Windows.Storage.FileIO.WriteTextAsync(file, this.SecretText);
+                }
+                else
+                {
+                    BitmapWriter.WriteBitmap(file, this.SecretBitmap.ToBitmap());
+                }
             }
         }
 

@@ -67,8 +67,7 @@ namespace GroupDStegafy.View
 
         private async void saveSecretButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO handle saving text
-            var file = await promptSaveImage();
+            var file = ((MainPageViewModel)DataContext).SecretBitmap == null ? await promptSaveText() : await promptSaveImage();
             ((MainPageViewModel)DataContext).HandleSaveSecret(file);
         }
 
@@ -84,6 +83,18 @@ namespace GroupDStegafy.View
                 SuggestedFileName = "image"
             };
             fileSavePicker.FileTypeChoices.Add("PNG files", new List<string> { ".png" });
+            var file = await fileSavePicker.PickSaveFileAsync();
+            return file;
+        }
+
+        private static async Task<StorageFile> promptSaveText()
+        {
+            var fileSavePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                SuggestedFileName = "text"
+            };
+            fileSavePicker.FileTypeChoices.Add("Plain text files", new List<string> { ".txt" });
             var file = await fileSavePicker.PickSaveFileAsync();
             return file;
         }
