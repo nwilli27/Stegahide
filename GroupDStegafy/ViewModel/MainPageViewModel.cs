@@ -328,6 +328,10 @@ namespace GroupDStegafy.ViewModel
             {
                 this.SourceBitmap = await BitmapReader.ReadBitmap(file);
                 this.CanSaveSource = false;
+                if (this.SourceBitmap.HasSecretMessage)
+                {
+                    this.decodeMessage(null);
+                }
             }
         }
 
