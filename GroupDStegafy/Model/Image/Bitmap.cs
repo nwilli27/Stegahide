@@ -156,21 +156,27 @@ namespace GroupDStegafy.Model.Image
         /// <summary>
         ///     Embeds the monochrome image in the source bitmap image by
         ///     using the least significant bit to alter the color.
-        ///     Precondition: bitmap is not null
+        ///     Precondition: bitmap is not null, bitmap is not larger than source
         ///     Post-condition: least significant bit in the source image is replaced.
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
         /// <param name="encrypt">Whether or not to encrypt the image.</param>
+        /// <exception cref="ArgumentNullException">bitmap</exception>
+        /// <exception cref="SecretTooLargeException">bitmap is too big to fit</exception>
         public void EmbedMonochromeImage(MonochromeBitmap bitmap, bool encrypt)
         {
             if (bitmap == null)
             {
                 throw new ArgumentNullException(nameof(bitmap));
             }
-
-            for (var x = 0; x < bitmap.Width && x < this.Height; x++)
+            if (bitmap.Width > this.Width || bitmap.Height > this.Height)
             {
-                for (var y = 0; y < bitmap.Height && y < this.Height; y++)
+                throw new SecretTooLargeException();
+            }
+
+            for (var x = 0; x < bitmap.Width; x++)
+            {
+                for (var y = 0; y < bitmap.Height; y++)
                 {
                     var pixelColor = this.GetPixelColor(x, y);
                     pixelColor.B = pixelColor.B.SetLeastSignificantBit(bitmap.GetPixelColor(x, y).Equals(Colors.White));
@@ -196,7 +202,7 @@ namespace GroupDStegafy.Model.Image
         /// <param name="bitsPerColorChannel">The bits per color channel</param>
         /// <exception cref="ArgumentNullException">message</exception>
         /// <exception cref="ArgumentOutOfRangeException">bitsPerColorChannel</exception>
-        /// <exception cref="MessageTooLargeException">Message cannot fit given the bits per color channel</exception>
+        /// <exception cref="SecretTooLargeException">Message cannot fit given the bits per color channel</exception>
         public void EmbedTextMessage(string message, string encryptionKey, int bitsPerColorChannel)
         {
             if (message == null)
@@ -209,7 +215,7 @@ namespace GroupDStegafy.Model.Image
             }
             if (this.isMessageTooBig(message, bitsPerColorChannel))
             {
-                throw new MessageTooLargeException();
+                throw new SecretTooLargeException();
             }
 
             var binaryMessage = setupTextMessage(message, encryptionKey);

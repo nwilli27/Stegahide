@@ -22,7 +22,8 @@ namespace GroupDStegafy.View
         public MainPage()
         {
             this.InitializeComponent();
-            ((MainPageViewModel) DataContext).MessageTooLarge += showMessageToLargePopup;
+            ((MainPageViewModel) DataContext).TextTooLarge += showTextTooLargePopup;
+            ((MainPageViewModel)DataContext).ImageTooLarge += showImageTooLargePopup;
         }
 
         #endregion
@@ -87,13 +88,26 @@ namespace GroupDStegafy.View
             return file;
         }
 
-        private static async void showMessageToLargePopup(object sender, object e)
+        private static async void showTextTooLargePopup(object sender, object e)
         {
             var messageToLargeDialog = new ContentDialog
             {
                 Title = "Message To Large",
                 Content = "The message exceeds the number of pixels available to encode." + Environment.NewLine +
-                          "Increase the (Bits Per Color Channel) or decrease total # of words.",
+                          "Please increase the (Bits Per Color Channel) or decrease total # of words.",
+                CloseButtonText = "Ok"
+            };
+
+            await messageToLargeDialog.ShowAsync();
+        }
+
+        private static async void showImageTooLargePopup(object sender, object e)
+        {
+            var messageToLargeDialog = new ContentDialog
+            {
+                Title = "Message To Large",
+                Content = "The secret image is larger than the source image." + Environment.NewLine +
+                          "Please use a larger source image or a smaller secret image.",
                 CloseButtonText = "Ok"
             };
 

@@ -289,9 +289,14 @@ namespace GroupDStegafy.ViewModel
         #region Events
 
         /// <summary>
-        ///     Occurs when the user tries to embed a message in an image where it will not fit.
+        ///     Occurs when the user tries to embed a text message in an image where it will not fit.
         /// </summary>
-        public event EventHandler MessageTooLarge;
+        public event EventHandler TextTooLarge;
+
+        /// <summary>
+        ///     Occurs when the user tries to embed a monochrome image in an image where it will not fit.
+        /// </summary>
+        public event EventHandler ImageTooLarge;
 
         #endregion
 
@@ -390,7 +395,14 @@ namespace GroupDStegafy.ViewModel
         {
             if (this.secretBitmap != null)
             {
-                this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
+                try
+                {
+                    this.SourceBitmap.EmbedMonochromeImage(this.SecretBitmap, this.EncryptImageSelected);
+                }
+                catch (SecretTooLargeException)
+                {
+                    this.ImageTooLarge?.Invoke(this, EventArgs.Empty);
+                }
             }
             else
             {
@@ -398,9 +410,9 @@ namespace GroupDStegafy.ViewModel
                 {
                     this.SourceBitmap.EmbedTextMessage(this.SecretText, this.EncryptionKey, this.BitsPerColorChannel);
                 }
-                catch (MessageTooLargeException)
+                catch (SecretTooLargeException)
                 {
-                    this.MessageTooLarge?.Invoke(this, EventArgs.Empty);
+                    this.TextTooLarge?.Invoke(this, EventArgs.Empty);
                 }
             }
 
