@@ -156,8 +156,8 @@ namespace GroupDStegafy.Model.Image
         /// <summary>
         ///     Embeds the monochrome image in the source bitmap image by
         ///     using the least significant bit to alter the color.
-        ///     Precondition: none
-        ///     Post-condition: @each significant bit in the source image is replaced.
+        ///     Precondition: bitmap is not null
+        ///     Post-condition: least significant bit in the source image is replaced.
         /// </summary>
         /// <param name="bitmap">The bitmap.</param>
         /// <param name="encrypt">Whether or not to encrypt the image.</param>
@@ -168,9 +168,9 @@ namespace GroupDStegafy.Model.Image
                 throw new ArgumentNullException(nameof(bitmap));
             }
 
-            for (var x = 0; x < bitmap.Width; x++)
+            for (var x = 0; x < bitmap.Width && x < this.Height; x++)
             {
-                for (var y = 0; y < bitmap.Height; y++)
+                for (var y = 0; y < bitmap.Height && y < this.Height; y++)
                 {
                     var pixelColor = this.GetPixelColor(x, y);
                     pixelColor.B = pixelColor.B.SetLeastSignificantBit(bitmap.GetPixelColor(x, y).Equals(Colors.White));
@@ -178,25 +178,34 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
-            this.checkToGetEncryptedBitmap(encrypt);
+            if (encrypt)
+            {
+                this.flipEmbeddedImage();
+            }
             this.setUpHeaderForSecretImage(encrypt);
         }
 
         /// <summary>
         ///     Embeds the text message in the bitmap pixels color bytes.
-        ///     Precondition: message != null, message will fit in the image
-        ///     Post-condition: message embedded in bitmap pixel color bytes
+        ///     Precondition: message != null, message will fit in the image,
+        ///                   bits per color channel is between 1 and 8 inclusive
+        ///     Post-condition: message embedded in bitmap
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="encryptionKey">The encryption key.</param>
         /// <param name="bitsPerColorChannel">The bits per color channel</param>
         /// <exception cref="ArgumentNullException">message</exception>
+        /// <exception cref="ArgumentOutOfRangeException">bitsPerColorChannel</exception>
         /// <exception cref="MessageTooLargeException">Message cannot fit given the bits per color channel</exception>
         public void EmbedTextMessage(string message, string encryptionKey, int bitsPerColorChannel)
         {
             if (message == null)
             {
                 throw new ArgumentNullException(nameof(message));
+            }
+            if (bitsPerColorChannel < 1 || bitsPerColorChannel > 8)
+            {
+                throw new ArgumentOutOfRangeException(nameof(bitsPerColorChannel));
             }
             if (this.isMessageTooBig(message, bitsPerColorChannel))
             {
@@ -236,7 +245,7 @@ namespace GroupDStegafy.Model.Image
             {
                 for (var y = 0; y < this.Height; y++)
                 {
-                    if (TextDecoder.IsFinishedDecoding(binaryMessage))
+                    if (TextDecoder.EndsWithStopIndicator(binaryMessage))
                     {
                         break;
                     } 
@@ -253,14 +262,6 @@ namespace GroupDStegafy.Model.Image
 
         #region Private Helpers - Checks
 
-        private void checkToGetEncryptedBitmap(bool encrypt)
-        {
-            if (encrypt)
-            {
-                this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
-            }
-        }
-
         private bool isMessageTooBig(string message, int bitsPerColorChannel)
         {
             const int possibleColorChannels = 3;
@@ -271,12 +272,6 @@ namespace GroupDStegafy.Model.Image
             return numberOfMessageBits > totalPossibleChannels;
         }
 
-        private static string checkToEncryptText(string message, string encryptionKey)
-        {
-            return !string.IsNullOrEmpty(encryptionKey) ?
-                TextCipher.EncryptTextWithKey(message, encryptionKey) : message;
-        }
-
         private static bool isHeaderPixel(int x, int y)
         {
             return (x == 0 && y == 0) || (x == 0 && y == 1);
@@ -285,6 +280,11 @@ namespace GroupDStegafy.Model.Image
         #endregion
 
         #region Private Helpers - Action
+
+        private void flipEmbeddedImage()
+        {
+            this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
+        }
 
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {
@@ -316,7 +316,7 @@ namespace GroupDStegafy.Model.Image
 
         private static string setupTextMessage(string message, string encryptionKey)
         {
-            message = checkToEncryptText(message, encryptionKey);
+            message = TextCipher.EncryptTextWithKey(message, encryptionKey);
             message += TextDecoder.DecodingStopIndicator + " ";
             return message.ConvertToBinary();
         }
@@ -327,7 +327,7 @@ namespace GroupDStegafy.Model.Image
             this.headerPixels.IsSecretText = true;
             this.headerPixels.HasEncryption = hasEncryption;
             this.headerPixels.BitsPerColorChannel = bitsPerColorChannel;
-            this.setHeaderPixels();
+            this.updateFromHeaderPixels();
         }
 
         private void setUpHeaderForSecretImage(bool hasEncryption)
@@ -336,10 +336,10 @@ namespace GroupDStegafy.Model.Image
             this.headerPixels.HasEncryption = hasEncryption;
             this.headerPixels.IsSecretText = false;
 
-            this.setHeaderPixels();
+            this.updateFromHeaderPixels();
         }
 
-        private void setHeaderPixels()
+        private void updateFromHeaderPixels()
         {
             this.SetPixelColor(0, 0, this.headerPixels.FirstPixelColor);
             this.SetPixelColor(0, 1, this.headerPixels.SecondPixelColor);

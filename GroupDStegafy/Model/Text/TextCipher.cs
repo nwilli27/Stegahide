@@ -41,15 +41,25 @@ namespace GroupDStegafy.Model.Text
 
         /// <summary>
         ///     Encrypts the text and adds the keyword to the front for
-        ///     decryption purposes.
-        ///     Precondition: none
+        ///     decryption purposes. Returns the passed in plain text as
+        ///     is if no keyword is provided.
+        ///     Precondition: plainText is not null
         ///     Post-condition: none
         /// </summary>
         /// <param name="plainText">The plain text.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>The encrypted text with the keyword added to the front</returns>
+        /// <exception cref="ArgumentNullException">plainText</exception>
         public static string EncryptTextWithKey(string plainText, string keyword)
         {
+            if (string.IsNullOrEmpty(keyword))
+            {
+                return plainText;
+            }
+            if (plainText == null)
+            {
+                throw new ArgumentNullException(nameof(plainText));
+            }
             var encryptedText = encryptText(plainText, keyword);
             return keyword + KeywordEnd + encryptedText;
         }

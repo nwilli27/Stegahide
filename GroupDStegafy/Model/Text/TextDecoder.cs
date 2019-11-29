@@ -43,31 +43,38 @@ namespace GroupDStegafy.Model.Text
         }
 
         /// <summary>
-        ///     Removes the decode indicator from the string.
-        ///     Precondition: none
+        ///     Removes the stop indicator from the string.
+        ///     Precondition: message is not null
         ///     Post-condition: none
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns>A string with the decode indicator removed.</returns>
         public static string RemoveDecodeIndicator(string message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
             return message.Replace(DecodingStopIndicator, string.Empty);
         }
 
         /// <summary>
-        ///     Determines whether [is finished decoding] [the specified binary message].
-        ///     Precondition: none
+        ///     Determines whether the passed in binary string ends with the stop indicator.
+        ///     Precondition: binary message is not null
         ///     Post-condition: none
         /// </summary>
         /// <param name="binaryMessage">The binary message.</param>
         /// <returns>
-        ///   <c>true</c> if [is finished decoding] [the specified binary message]; otherwise, <c>false</c>.
+        ///   <c>true</c> if message ends with stop indicator; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsFinishedDecoding(string binaryMessage)
+        public static bool EndsWithStopIndicator(string binaryMessage)
         {
+            if (binaryMessage == null)
+            {
+                throw new ArgumentNullException(nameof(binaryMessage));
+            }
             var message = binaryMessage.ConvertBinaryToString().Trim();
-            message = message.Substring(Math.Max(0, message.Length - DecodingStopIndicator.Length));
-            return message.Contains(DecodingStopIndicator);
+            return message.EndsWith(DecodingStopIndicator);
         }
 
         #endregion
