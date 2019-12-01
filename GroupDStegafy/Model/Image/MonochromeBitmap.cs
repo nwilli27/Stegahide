@@ -14,6 +14,12 @@ namespace GroupDStegafy.Model.Image
 
         #endregion
 
+        #region Constants
+
+        private const int PixelByteSize = 4;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -97,7 +103,7 @@ namespace GroupDStegafy.Model.Image
         /// <returns>The original bitmap image.</returns>
         public Bitmap ToBitmap()
         {
-            var bytes = new byte[this.pixels.Length * 4];
+            var bytes = new byte[this.pixels.Length * PixelByteSize];
             var bitmap = new Bitmap(bytes, this.Width, 1, 1);
             for (var i = 0; i < this.pixels.Length; i++)
             {

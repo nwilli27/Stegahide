@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Windows.UI;
 using GroupDStegafy.Model.Extensions;
 
@@ -33,13 +34,13 @@ namespace GroupDStegafy.Model.Text
                 throw new ArgumentNullException(nameof(pixelColor));
             }
 
-            var binaryMessage = string.Empty;
+            var binaryMessage = new StringBuilder();
 
-            binaryMessage += getMessageBitsFromChannel(pixelColor.R, bitsPerColorChannel);
-            binaryMessage += getMessageBitsFromChannel(pixelColor.G, bitsPerColorChannel);
-            binaryMessage += getMessageBitsFromChannel(pixelColor.B, bitsPerColorChannel);
+            binaryMessage.Append(getMessageBitsFromChannel(pixelColor.R, bitsPerColorChannel));
+            binaryMessage.Append(getMessageBitsFromChannel(pixelColor.G, bitsPerColorChannel));
+            binaryMessage.Append(getMessageBitsFromChannel(pixelColor.B, bitsPerColorChannel));
 
-            return binaryMessage;
+            return binaryMessage.ToString();
         }
 
         /// <summary>

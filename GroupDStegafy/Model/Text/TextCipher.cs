@@ -74,28 +74,21 @@ namespace GroupDStegafy.Model.Text
         /// <returns>The decrypted text message.</returns>
         public static string DecryptText(string encryptedText)
         {
-            EncryptionKey = ExtractKeyword(encryptedText);
+            EncryptionKey = extractKeyword(encryptedText);
             EncryptedMessage = extractMessage(encryptedText);
 
             return decryptText(EncryptedMessage, EncryptionKey);
         }
 
-        /// <summary>
-        ///     Extracts the keyword from the encrypted text.
-        ///     Precondition: none
-        ///     Post-condition: nome
-        /// </summary>
-        /// <param name="encryptedText">The encrypted text.</param>
-        /// <returns>The keyword from the encrypted text.</returns>
-        public static string ExtractKeyword(string encryptedText)
+        #endregion
+
+        #region Private Helpers
+
+        private static string extractKeyword(string encryptedText)
         {
             var keywordEndIndex = encryptedText.IndexOf(KeywordEnd, StringComparison.Ordinal);
             return encryptedText.Substring(0, keywordEndIndex);
         }
-
-        #endregion
-
-        #region Private Helpers
 
         private static string extractMessage(string encryptedText)
         {
@@ -105,41 +98,41 @@ namespace GroupDStegafy.Model.Text
 
         private static string encryptText(string plainText, string keyword)
         {
-            var textInput = getStringBuilderForCipher(plainText);
+            var textBuilder = getStringBuilderForCipher(plainText);
             keyword = keyword.ToUpper();
             var keywordIndex = 0;
 
-            for (var i = 0; i < textInput.Length; i++)
+            for (var i = 0; i < textBuilder.Length; i++)
             {
-                textInput[i] = (char)(textInput[i] + keyword[keywordIndex] - FirstCharacter);
+                textBuilder[i] = (char)(textBuilder[i] + keyword[keywordIndex] - FirstCharacter);
 
-                if (textInput[i] > LastCharacter)
+                if (textBuilder[i] > LastCharacter)
                 {
-                    textInput[i] = (char)(textInput[i] - LastCharacter + FirstCharacter - 1);
+                    textBuilder[i] = (char)(textBuilder[i] - LastCharacter + FirstCharacter - 1);
                 }
                 
                 keywordIndex = incrementKeywordIndex(keyword, keywordIndex);
             }
 
-            return textInput.ToString();
+            return textBuilder.ToString();
         }
 
         private static string decryptText(string encryptedText, string keyword)
         {
-            var textInput = getStringBuilderForCipher(encryptedText);
+            var textBuilder = getStringBuilderForCipher(encryptedText);
             keyword = keyword.ToUpper();
             var keywordIndex = 0;
 
-            for (var i = 0; i < textInput.Length; i++)
+            for (var i = 0; i < textBuilder.Length; i++)
             {
-                textInput[i] = textInput[i] >= keyword[keywordIndex] ? 
-                    (char)(textInput[i] - keyword[keywordIndex] + FirstCharacter) : 
-                    (char)(FirstCharacter + (LastCharacter - keyword[keywordIndex] + textInput[i] - FirstCharacter) + 1);
+                textBuilder[i] = textBuilder[i] >= keyword[keywordIndex] ? 
+                    (char)(textBuilder[i] - keyword[keywordIndex] + FirstCharacter) : 
+                    (char)(FirstCharacter + (LastCharacter - keyword[keywordIndex] + textBuilder[i] - FirstCharacter) + 1);
 
                 keywordIndex = incrementKeywordIndex(keyword, keywordIndex);
             }
 
-            return textInput.ToString();
+            return textBuilder.ToString();
         }
 
         private static int incrementKeywordIndex(string keyword, int keywordIndex)

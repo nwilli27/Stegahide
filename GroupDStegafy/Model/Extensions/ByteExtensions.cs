@@ -43,10 +43,8 @@ namespace GroupDStegafy.Model.Extensions
             {
                 return (byte) (byteInput | 1);
             }
-            else
-            {
-                return (byte) (byteInput & 0xfe);
-            }
+
+            return (byte) (byteInput & 0xfe);
         }
 
         /// <summary>
@@ -103,8 +101,8 @@ namespace GroupDStegafy.Model.Extensions
         /// <returns>A new byte that is masked by the bit sequence appended on the end.</returns>
         public static byte MaskByteWithBitSequence(this byte byteInput, string bitSequence)
         {
-            var inputAsString = byteInput.ConvertToBaseFormTwo();
-            var sequenceAdded = inputAsString.ReplaceAt(inputAsString.Length - bitSequence.Length, bitSequence);
+            var inputBaseTwoForm = byteInput.ConvertToBaseFormTwo();
+            var sequenceAdded = inputBaseTwoForm.ReplaceAt(inputBaseTwoForm.Length - bitSequence.Length, bitSequence);
 
             return Convert.ToByte(sequenceAdded, BaseFormTwo);
         }
