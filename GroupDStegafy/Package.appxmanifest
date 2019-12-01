@@ -32,7 +32,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="GroupDStegafy.App">
       <uap:VisualElements
-        DisplayName="Stegafy by Nicholl, Williams"
+        DisplayName="Stegahide by Nicholl, Williams"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="GroupDStegafy"
