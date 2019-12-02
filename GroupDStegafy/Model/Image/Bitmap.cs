@@ -247,9 +247,9 @@ namespace GroupDStegafy.Model.Image
         {
             var binaryMessage = string.Empty;
 
-            for (var x = 0; x < this.Width; x++)
+            for (var y = 0; y < this.Height; y++)
             {
-                for (var y = 0; y < this.Height; y++)
+                for (var x = 0; x < this.Width; x++)
                 {
                     if (TextDecoder.EndsWithStopIndicator(binaryMessage))
                     {
@@ -280,7 +280,7 @@ namespace GroupDStegafy.Model.Image
 
         private static bool isHeaderPixel(int x, int y)
         {
-            return (x == 0 && y == 0) || (x == 0 && y == 1);
+            return (x == 0 && y == 0) || (x == 1 && y == 0);
         }
 
         #endregion
@@ -348,13 +348,13 @@ namespace GroupDStegafy.Model.Image
         private void updateFromHeaderPixels()
         {
             this.SetPixelColor(0, 0, this.headerPixels.FirstPixelColor);
-            this.SetPixelColor(0, 1, this.headerPixels.SecondPixelColor);
+            this.SetPixelColor(1, 0, this.headerPixels.SecondPixelColor);
         }
 
         private void createHeaderPixels()
         {
             var pixelOne = this.GetPixelColor(0, 0);
-            var pixelTwo = this.GetPixelColor(0, 1);
+            var pixelTwo = this.GetPixelColor(1, 0);
 
             this.headerPixels = new HeaderPixels(pixelOne, pixelTwo);
         }
