@@ -221,9 +221,9 @@ namespace GroupDStegafy.Model.Image
             var binaryMessage = setupTextMessage(message, encryptionKey);
             var binaryMessageBitQueue = binaryMessage.SplitInParts(bitsPerColorChannel);
 
-            for (var x = 0; x < this.Width; x++)
+            for (var y = 0; y < this.Height; y++)
             {
-                for (var y = 0; y < this.Height; y++)
+                for (var x = 0; x < this.Width; x++)
                 {
                     if (binaryMessageBitQueue.Count == 0)
                     {
