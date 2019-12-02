@@ -42,7 +42,7 @@
             </Image.RenderTransform>
         </Image>
         <Button Name="decodeButton" Content="Decode" Canvas.Left="697" Canvas.Top="310" Width="{StaticResource ButtonWidth}" Foreground="{StaticResource ButtonColor}" Command="{Binding DecodeCommand}"/>
-        <CheckBox x:Name="showEncryptedCheckbox" Content="Show Encrypted" Canvas.Left="697" Canvas.Top="418" FontSize="10" Width="115" Foreground="White" Visibility="{Binding EncryptionVisibility}" IsChecked="{Binding ShowEncryptedSelected, Mode=TwoWay}"/>
+        <CheckBox x:Name="showEncryptedCheckbox" Content="Show Encrypted" Canvas.Left="697" Canvas.Top="418" FontSize="10" Width="115" Visibility="{Binding EncryptionVisibility}" IsChecked="{Binding ShowEncryptedSelected, Mode=TwoWay}" RequestedTheme="Dark"/>
         <Button Name="encodeButton" Content="Encode" Canvas.Left="729" Canvas.Top="663" Width="{StaticResource ButtonWidth}" Foreground="{StaticResource ButtonColor}" Command="{Binding EncodeCommand}"/>
         <TextBlock Width="123" Height="49" Foreground="White" FontSize="14" Canvas.Left="693" Canvas.Top="381" Text="Decoding Options"/>
         <Rectangle Width="114" Height="3" Canvas.Left="692" Canvas.Top="405" Fill="White"/>
@@ -52,7 +52,7 @@
             <TextBlock TextWrapping="Wrap" Height="19" FontSize="10" Text="Bits used per color"/>
             <Slider x:Name="bitsPerColorSlider" Width="107" Maximum="8" Minimum="1" Value="{Binding BitsPerColorChannel, Mode=TwoWay}" SmallChange="1" LargeChange="1"/>
         </StackPanel>
-        <CheckBox Name="encryptImageCheckbox" Canvas.Left="697" Canvas.Top="515" Content="Encrypt Image" FontSize="10" Width="107" Visibility="{Binding ImageEncryptionVisibility}" IsChecked="{Binding EncryptImageSelected, Mode=TwoWay}"/>
+        <CheckBox Name="encryptImageCheckbox" Canvas.Left="697" Canvas.Top="515" Content="Encrypt Image" FontSize="10" Width="107" Visibility="{Binding ImageEncryptionVisibility}" IsChecked="{Binding EncryptImageSelected, Mode=TwoWay}" RequestedTheme="Dark"/>
         <TextBlock Width="123" Height="49" Foreground="White" FontSize="14" Canvas.Left="693" Canvas.Top="471" Text="Encoding Options"/>
         <Rectangle Width="114" Height="3" Canvas.Left="692" Canvas.Top="495" Fill="White"/>
     </Canvas>

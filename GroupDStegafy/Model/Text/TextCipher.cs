@@ -7,7 +7,7 @@ namespace GroupDStegafy.Model.Text
     /// <summary>
     ///     Class responsible for methods dealing with encrypting text
     /// </summary>
-    internal class TextCipher
+    public static class TextCipher
     {
         #region Properties
 

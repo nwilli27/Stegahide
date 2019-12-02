@@ -7,7 +7,7 @@ namespace GroupDStegafy.Model.Text
     /// <summary>
     ///     Class responsible for holding methods to help encoding text in a bitmap
     /// </summary>
-    internal class TextEncoder
+    public static class TextEncoder
     {
 
         #region Methods 

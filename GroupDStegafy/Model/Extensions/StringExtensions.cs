@@ -9,7 +9,7 @@ namespace GroupDStegafy.Model.Extensions
     /// <summary>
     ///     Class offers additional functionality to strings.
     /// </summary>
-    internal static class StringExtensions
+    public static class StringExtensions
     {
 
         #region Constants
