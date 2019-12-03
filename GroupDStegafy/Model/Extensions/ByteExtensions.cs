@@ -11,7 +11,14 @@ namespace GroupDStegafy.Model.Extensions
 
         private const char ZeroBit = '0';
 
+        /// <summary>
+        ///  The base form two
+        /// </summary>
         public const int BaseFormTwo = 2;
+
+        /// <summary>
+        /// The byte length
+        /// </summary>
         public const int ByteLength = 8;
 
         #endregion

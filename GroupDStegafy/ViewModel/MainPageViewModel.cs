@@ -453,7 +453,7 @@ namespace GroupDStegafy.ViewModel
             else
             {
                 this.SecretBitmap = MonochromeBitmap.FromEmbeddedSecret(this.SourceBitmap);
-                if (this.SourceBitmap.HasEncryption && !this.ShowEncryptedSelected)
+                if (this.SourceBitmap.HasEncryption && this.ShowEncryptedSelected)
                 {
                     this.SecretBitmap = this.SecretBitmap.GetFlipped();
                 }
