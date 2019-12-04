@@ -174,11 +174,6 @@ namespace GroupDStegafy.Model.Image
                 throw new SecretTooLargeException();
             }
 
-            if (encrypt)
-            {
-                bitmap.GetFlipped();
-            }
-
             for (var x = 0; x < bitmap.Width; x++)
             {
                 for (var y = 0; y < bitmap.Height; y++)
@@ -189,6 +184,10 @@ namespace GroupDStegafy.Model.Image
                 }
             }
 
+            if (encrypt)
+            {
+                this.flipEmbeddedImage();
+            }
             this.setUpHeaderForSecretImage(encrypt);
         }
 
@@ -287,6 +286,11 @@ namespace GroupDStegafy.Model.Image
         #endregion
 
         #region Private Helpers - Action
+
+        private void flipEmbeddedImage()
+        {
+            this.EmbedMonochromeImage(MonochromeBitmap.FromEmbeddedSecret(this).GetFlipped(), false);
+        }
 
         private void embedMessageBitsInPixel(int x, int y, Queue<string> binaryMessageBitQueue)
         {

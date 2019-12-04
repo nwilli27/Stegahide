@@ -13,9 +13,6 @@ namespace GroupDStegafy.Model.Text
 
         #region Constants
 
-        /// <summary>
-        /// The decoding stop indicator
-        /// </summary>
         public const string DecodingStopIndicator = "#.-.-.-#";
 
         #endregion
