@@ -14,7 +14,7 @@ namespace GroupDStegafy.Model.Extensions
 
         #region Constants
 
-        public const string AlphabetOnlyRegex = "[^a-zA-Z]";
+        private const string AlphabetOnlyRegex = "[^a-zA-Z]";
 
         #endregion
 
